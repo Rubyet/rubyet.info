@@ -4,9 +4,7 @@ on:
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - master
+  workflow_dispatch:  # Allow manual trigger
 
 jobs:
   build-and-deploy:
@@ -20,15 +18,23 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
+          
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
           
       - name: Install dependencies
-        run: npm ci
+        run: npm install --legacy-peer-deps
         
       - name: Build project
         run: npm run build
         env:
           CI: false
+          NODE_OPTIONS: "--max_old_space_size=4096"
           
       - name: Deploy to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -44,14 +50,17 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
+            **/.vscode/**
+            **/README.md
             
-      - name: Deployment Success
+      - name: Deployment Success Notification
         if: success()
         run: |
           echo "✅ Deployment successful!"
-          echo "🚀 Your portfolio is now live at your domain"
+          echo "🚀 Your portfolio is now live!"
+          echo "📊 Build size: $(du -sh build | cut -f1)"
           
-      - name: Deployment Failed
+      - name: Deployment Failed Notification
         if: failure()
         run: |
           echo "❌ Deployment failed!"

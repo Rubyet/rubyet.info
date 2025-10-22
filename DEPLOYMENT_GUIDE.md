@@ -124,14 +124,31 @@ This file will:
 1. **Missing dependencies** - Check package.json
 2. **Build errors** - Check error logs in Actions tab
 3. **Memory issues** - Might need to optimize build
+4. **Package lock mismatch** - package-lock.json out of sync
 
 **Solution:**
 ```powershell
 # Test build locally first
 npm run build
 
-# If it works locally, check GitHub Actions logs
+# If you see "npm ci" errors about lock file mismatch:
+# Option 1: Regenerate package-lock.json
+Remove-Item package-lock.json
+npm install
+git add package-lock.json
+git commit -m "Update package-lock.json"
+git push
+
+# Option 2: The workflow now uses "npm install --legacy-peer-deps"
+# which handles this automatically
 ```
+
+**Common npm ci error:**
+```
+npm error `npm ci` can only install packages when your package.json 
+and package-lock.json are in sync.
+```
+**Fix:** The workflow has been updated to use `npm install` instead of `npm ci` to handle version mismatches automatically.
 
 ### Issue: Files Not Deploying to Correct Directory
 
