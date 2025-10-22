@@ -1,0 +1,238 @@
+.experience {
+  padding: 8rem 2rem;
+  position: relative;
+}
+
+.experience-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.timeline {
+  position: relative;
+  padding: 2rem 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+}
+
+.timeline-item {
+  margin-bottom: 4rem;
+  position: relative;
+}
+
+.timeline-content {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.timeline-item:nth-child(even) .timeline-content {
+  justify-content: flex-end;
+}
+
+.timeline-icon {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+  z-index: 2;
+}
+
+.timeline-card {
+  width: 45%;
+  padding: 2rem;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  border: 2px solid;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.dark-mode .timeline-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.light-mode .timeline-card {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.timeline-card:hover {
+  border-color: #667eea;
+  box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);
+}
+
+.timeline-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.dark-mode .timeline-header h3 {
+  color: #fff;
+}
+
+.light-mode .timeline-header h3 {
+  color: #000;
+}
+
+.company {
+  font-size: 1.1rem;
+  color: #667eea;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+}
+
+.timeline-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.dark-mode .timeline-meta {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.light-mode .timeline-meta {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.date {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.timeline-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 1rem 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.dark-mode .timeline-description {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.light-mode .timeline-description {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.timeline-achievements {
+  margin: 1.5rem 0;
+}
+
+.achievement-item {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  font-family: 'Inter', sans-serif;
+}
+
+.dark-mode .achievement-item {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.light-mode .achievement-item {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.achievement-bullet {
+  color: #667eea;
+  font-weight: bold;
+}
+
+.timeline-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.skill-tag {
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.dark-mode .skill-tag {
+  background: rgba(102, 126, 234, 0.15);
+  color: #8b9aee;
+}
+
+.light-mode .skill-tag {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+}
+
+.skill-tag:hover {
+  transform: translateY(-2px);
+  background: rgba(102, 126, 234, 0.25);
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .timeline::before {
+    left: 30px;
+  }
+
+  .timeline-icon {
+    left: 30px;
+  }
+
+  .timeline-content {
+    justify-content: flex-end !important;
+    padding-left: 80px;
+  }
+
+  .timeline-card {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .experience {
+    padding: 5rem 1rem;
+  }
+
+  .timeline-card {
+    padding: 1.5rem;
+  }
+
+  .timeline-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+
+  .timeline-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

@@ -1,0 +1,32 @@
+export const blogData = [
+  {
+    id: 1,
+    title: 'Building Scalable React Applications: Best Practices',
+    category: 'React',
+    excerpt: 'Learn the best practices for building scalable React applications that can grow with your business needs.',
+    image: '/img/post-1.jpg',
+    date: 'Oct 15, 2023',
+    readTime: 5,
+    link: '#',
+  },
+  {
+    id: 2,
+    title: 'Microservices Architecture: A Practical Guide',
+    category: 'Architecture',
+    excerpt: 'Explore the world of microservices and learn how to implement them effectively in your projects.',
+    image: '/img/post-2.jpg',
+    date: 'Oct 10, 2023',
+    readTime: 8,
+    link: '#',
+  },
+  {
+    id: 3,
+    title: 'The Future of Web Development in 2024',
+    category: 'Technology',
+    excerpt: 'Discover the latest trends and technologies that will shape the future of web development.',
+    image: '/img/post-3.jpg',
+    date: 'Oct 5, 2023',
+    readTime: 6,
+    link: '#',
+  },
+];
