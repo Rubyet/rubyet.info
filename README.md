@@ -2,6 +2,8 @@
 
 A highly modern, fully responsive React portfolio website showcasing a 5-year software engineering journey. Built with cutting-edge technologies and featuring glassmorphism design, smooth animations, and modular architecture for easy customization.
 
+![Deploy Status](https://github.com/Rubyet/rubyet.info/actions/workflows/deploy.yml/badge.svg)
+
 ## ✨ Features
 
 - **Modern Design**: Glassmorphism effects, gradient backgrounds, and smooth animations
@@ -13,6 +15,7 @@ A highly modern, fully responsive React portfolio website showcasing a 5-year so
 - **Scroll Animations**: Elements animate as you scroll
 - **Contact Form**: Integrated contact form (easily connect to EmailJS)
 - **SEO Friendly**: Optimized meta tags and semantic HTML
+- **Auto Deployment**: GitHub Actions for automatic FTP deployment
 
 ## 🎯 Sections
 
@@ -94,11 +97,43 @@ Fully responsive with breakpoints at 968px, 768px, and 480px
 
 ## 🌐 Deployment
 
-### Netlify / Vercel
+### Automatic FTP Deployment (Current Setup)
+This project is configured for automatic deployment via GitHub Actions!
+
+**Every push to `master` branch automatically:**
+1. ✅ Builds the React app
+2. ✅ Deploys to FTP server
+3. ✅ Updates live website
+
+**Setup Instructions:**
+1. Add GitHub Secrets (Settings → Secrets → Actions):
+   - `FTP_USERNAME`: Your FTP username
+   - `FTP_PASSWORD`: Your FTP password
+2. Push to master branch
+3. Check Actions tab for deployment status
+
+📖 **See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for detailed instructions**
+
+### Alternative Deployment Options
+
+#### Netlify
 1. Push to GitHub
-2. Connect repository
+2. Connect repository at netlify.com
 3. Build command: `npm run build`
 4. Publish directory: `build`
+
+#### Vercel
+1. Push to GitHub
+2. Import project at vercel.com
+3. Auto-detects React settings
+4. Deploy with one click
+
+#### GitHub Pages
+```bash
+npm install --save-dev gh-pages
+# Add to package.json: "homepage": "https://username.github.io/repo"
+npm run deploy
+```
 
 ## 📄 File Structure
 
