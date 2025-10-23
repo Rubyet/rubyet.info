@@ -27,7 +27,7 @@ const Hero = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            Hi there! 👋 I'm
+            🎮 Press START to Begin
           </motion.div>
 
           <motion.h1
@@ -36,19 +36,25 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            Rubyet Hossain
+            RUBYET HOSSAIN
+            <span className="player-tag">[ Main Character ]</span>
           </motion.h1>
 
           <div className="hero-title">
+            <span className="title-prefix">Class: </span>
             <TypeAnimation
               sequence={[
-                'Full Stack Developer',
+                'Full Stack Developer 💻',
                 2000,
-                'PHP & Laravel Expert',
+                'Java Springboot Specialist ☕',
                 2000,
-                'Mobile App Developer',
+                'PHP & Laravel Expert 🐘',
                 2000,
-                'Problem Solver',
+                'Android Developer 🤖',
+                2000,
+                'Code Warrior ⚔️',
+                2000,
+                'Tech Enthusiast 🎯',
                 2000,
               ]}
               wrapper="span"
@@ -64,9 +70,11 @@ const Hero = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
           >
-            Building robust web and mobile applications with modern technologies
+            <span className="status-text">Status:</span> On a quest to build scalable applications & conquer the tech industry's ultimate MMO
             <br />
-            Based in <span className="highlight">Dhaka, Bangladesh</span>
+            <span className="location-text">📍 Home Base:</span> <span className="highlight">Dhaka, Bangladesh</span>
+            <br />
+            <span className="achievement-text">🏆 Achievement Unlocked:</span> <span className="highlight">Arctic Code Vault Contributor</span>
           </motion.p>
 
           <motion.div
@@ -81,7 +89,7 @@ const Hero = () => {
               whileTap={{ scale: 0.95 }}
               onClick={() => scrollToSection('projects')}
             >
-              View My Work
+              🎯 View Quest Log
             </motion.button>
             <motion.button
               className="cta-button secondary"
@@ -89,7 +97,7 @@ const Hero = () => {
               whileTap={{ scale: 0.95 }}
               onClick={() => scrollToSection('contact')}
             >
-              Let's Connect
+              💬 Join Party
             </motion.button>
           </motion.div>
 

@@ -28,9 +28,9 @@ const Projects = () => {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="section-title">Featured Projects</h2>
+          <h2 className="section-title">🎯 Quest Log & Achievements</h2>
           <p className="section-subtitle">
-            Showcase of my best work over the years
+            Completed missions and boss battles from my journey
           </p>
         </motion.div>
 

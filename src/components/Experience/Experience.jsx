@@ -20,8 +20,8 @@ const Experience = () => {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="section-title">Experience</h2>
-          <p className="section-subtitle">My professional journey over 5 years</p>
+          <h2 className="section-title">💼 Campaign History</h2>
+          <p className="section-subtitle">5+ years of leveling up in the tech MMO</p>
         </motion.div>
 
         <div className="timeline">

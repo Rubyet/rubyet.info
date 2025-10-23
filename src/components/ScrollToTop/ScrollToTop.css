@@ -22,6 +22,16 @@
   box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
 }
 
+@media (max-width: 1024px) {
+  .scroll-to-top {
+    width: 55px;
+    height: 55px;
+    bottom: 1.75rem;
+    right: 1.75rem;
+    font-size: 1.4rem;
+  }
+}
+
 @media (max-width: 768px) {
   .scroll-to-top {
     width: 50px;
@@ -29,5 +39,15 @@
     bottom: 1.5rem;
     right: 1.5rem;
     font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .scroll-to-top {
+    width: 45px;
+    height: 45px;
+    bottom: 1.25rem;
+    right: 1.25rem;
+    font-size: 1.1rem;
   }
 }

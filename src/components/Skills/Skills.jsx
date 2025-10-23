@@ -19,9 +19,9 @@ const Skills = () => {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="section-title">Skills & Technologies</h2>
+          <h2 className="section-title">⚡ Skill Tree & Power Levels</h2>
           <p className="section-subtitle">
-            Tools and technologies I work with
+            My equipped arsenal for conquering coding challenges
           </p>
         </motion.div>
 

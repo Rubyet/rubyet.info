@@ -197,6 +197,24 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .experience {
+    padding: 6rem 2rem;
+  }
+
+  .timeline-card {
+    padding: 2rem;
+  }
+
+  .company-title {
+    font-size: clamp(1.4rem, 4vw, 1.6rem);
+  }
+
+  .role {
+    font-size: 1rem;
+  }
+}
+
 @media (max-width: 968px) {
   .timeline::before {
     left: 30px;
@@ -216,23 +234,124 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .experience {
-    padding: 5rem 1rem;
+    padding: 5rem 1.5rem;
   }
 
-  .timeline-card {
-    padding: 1.5rem;
+  .timeline::before {
+    left: 25px;
   }
 
   .timeline-icon {
+    left: 25px;
     width: 50px;
     height: 50px;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+  }
+
+  .timeline-content {
+    padding-left: 70px;
+  }
+
+  .timeline-card {
+    padding: 1.75rem;
+  }
+
+  .company-title {
+    font-size: clamp(1.3rem, 4vw, 1.5rem);
+  }
+
+  .role {
+    font-size: 0.95rem;
+  }
+
+  .timeline-meta {
+    gap: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .timeline-description {
+    font-size: 0.95rem;
+  }
+
+  .achievement-item {
+    font-size: 0.9rem;
+  }
+
+  .timeline-skills {
+    margin-top: 1.25rem;
+  }
+
+  .skill-tag {
+    padding: 0.35rem 0.85rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .experience {
+    padding: 4rem 1rem;
+  }
+
+  .timeline::before {
+    left: 20px;
+  }
+
+  .timeline-icon {
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+
+  .timeline-content {
+    padding-left: 55px;
+  }
+
+  .timeline-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .company-title {
+    font-size: clamp(1.2rem, 4vw, 1.4rem);
+    margin-bottom: 0.4rem;
+  }
+
+  .role {
+    font-size: 0.9rem;
   }
 
   .timeline-meta {
     flex-direction: column;
     gap: 0.5rem;
+    margin: 0.75rem 0;
+    font-size: 0.85rem;
+  }
+
+  .timeline-description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0.75rem 0;
+  }
+
+  .timeline-achievements {
+    margin: 1rem 0;
+  }
+
+  .achievement-item {
+    font-size: 0.85rem;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .timeline-skills {
+    gap: 0.4rem;
+    margin-top: 1rem;
+  }
+
+  .skill-tag {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.75rem;
   }
 }

@@ -529,19 +529,47 @@ body.light-mode .alumni-text strong {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .education-section {
-    padding: 60px 0;
+    padding: 80px 20px;
   }
 
   .section-title {
-    font-size: 32px;
+    font-size: 36px;
+  }
+
+  .education-degree {
+    font-size: 22px;
+  }
+
+  .education-right {
+    padding: 25px;
+  }
+
+  .certifications-grid,
+  .achievements-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .cta-card {
+    padding: 40px 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .education-section {
+    padding: 60px 20px;
+  }
+
+  .section-title {
+    font-size: clamp(1.75rem, 5vw, 2rem);
     flex-direction: column;
     gap: 10px;
   }
 
   .section-subtitle {
-    font-size: 16px;
+    font-size: clamp(0.95rem, 3vw, 1rem);
   }
 
   .education-card-inner {
@@ -571,7 +599,11 @@ body.light-mode .alumni-text strong {
   }
 
   .education-degree {
-    font-size: 20px;
+    font-size: clamp(1.2rem, 4vw, 1.4rem);
+  }
+
+  .education-institution {
+    font-size: 15px;
   }
 
   .education-meta {
@@ -579,13 +611,38 @@ body.light-mode .alumni-text strong {
     gap: 10px;
   }
 
+  .education-description {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .highlights-title,
+  .courses-title {
+    font-size: 15px;
+  }
+
+  .highlight-item {
+    font-size: 13px;
+  }
+
+  .course-tag {
+    font-size: 12px;
+    padding: 5px 12px;
+  }
+
   .subsection-title {
-    font-size: 24px;
+    font-size: clamp(1.5rem, 4vw, 1.75rem);
   }
 
   .certifications-grid,
   .achievements-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .certification-card,
+  .achievement-card {
+    padding: 25px;
   }
 
   .cta-card {
@@ -593,10 +650,163 @@ body.light-mode .alumni-text strong {
   }
 
   .cta-title {
-    font-size: 24px;
+    font-size: clamp(1.5rem, 4vw, 1.75rem);
   }
 
   .cta-description {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .education-section {
+    padding: 50px 15px;
+  }
+
+  .section-title {
+    font-size: clamp(1.5rem, 5vw, 1.75rem);
+    margin-bottom: 8px;
+  }
+
+  .section-subtitle {
+    font-size: clamp(0.85rem, 3vw, 0.95rem);
+    margin-bottom: 40px;
+  }
+
+  .education-card {
+    margin-bottom: 30px;
+  }
+
+  .education-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .timeline-line {
+    margin-left: 8px;
+  }
+
+  .education-right {
+    padding: 15px;
+  }
+
+  .education-degree {
+    font-size: clamp(1.1rem, 4vw, 1.3rem);
+    margin-bottom: 8px;
+  }
+
+  .education-institution {
+    font-size: 14px;
+  }
+
+  .education-period,
+  .education-grade {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+
+  .education-description {
+    font-size: 13px;
+    margin-bottom: 15px;
+  }
+
+  .education-highlights,
+  .education-courses {
+    margin-top: 20px;
+    padding-top: 20px;
+  }
+
+  .highlights-title,
+  .courses-title {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .highlight-item {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+  .course-tag {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+
+  .alumni-connect {
+    padding: 15px;
+    margin-top: 20px;
+  }
+
+  .alumni-text {
+    font-size: 13px;
+  }
+
+  .certifications-section,
+  .achievements-section {
+    margin-bottom: 50px;
+  }
+
+  .subsection-title {
+    font-size: clamp(1.3rem, 4vw, 1.5rem);
+    margin-bottom: 30px;
+  }
+
+  .certification-card,
+  .achievement-card {
+    padding: 20px 15px;
+  }
+
+  .certification-icon,
+  .achievement-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 15px;
+  }
+
+  .certification-title,
+  .achievement-title {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .certification-issuer,
+  .achievement-organization {
+    font-size: 13px;
+  }
+
+  .certification-date,
+  .achievement-year {
+    font-size: 12px;
+  }
+
+  .certification-id {
+    font-size: 11px;
+  }
+
+  .achievement-description {
+    font-size: 13px;
+  }
+
+  .education-cta {
+    margin-top: 40px;
+  }
+
+  .cta-card {
+    padding: 25px 15px;
+  }
+
+  .cta-title {
+    font-size: clamp(1.3rem, 4vw, 1.5rem);
+    margin-bottom: 12px;
+  }
+
+  .cta-description {
+    font-size: 13px;
+    margin-bottom: 25px;
+  }
+
+  .cta-button {
+    padding: 12px 30px;
     font-size: 14px;
   }
 }
