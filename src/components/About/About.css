@@ -3,6 +3,15 @@
   position: relative;
 }
 
+.about-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+  position: relative;
+  min-height: 100vh;
+}
+
 .about-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -159,6 +168,10 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
+  position: sticky;
+  top: 120px;
+  height: fit-content;
+  position: relative;
 }
 
 .stat-card {
@@ -421,6 +434,8 @@
   .about-stats {
     grid-template-columns: 1fr;
     gap: 1rem;
+    position: relative;
+    top: 0;
   }
 
   .stat-card {

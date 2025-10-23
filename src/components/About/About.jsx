@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import MarioCharacter from './MarioCharacter';
 import './About.css';
 
 const About = () => {
@@ -8,6 +9,18 @@ const About = () => {
     triggerOnce: true,
     threshold: 0.1,
   });
+
+  const [marioPushing, setMarioPushing] = React.useState(false);
+
+  // Mario pushes periodically
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setMarioPushing(true);
+      setTimeout(() => setMarioPushing(false), 300);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const stats = [
     { number: '1,200+', label: 'XP Points (GitHub Contributions)', icon: '⚡' },
@@ -99,11 +112,14 @@ const About = () => {
           </motion.div>
 
           <motion.div
-            className="about-stats"
+            className={`about-stats ${marioPushing ? 'mario-pushing' : ''}`}
             initial={{ opacity: 0, x: 50 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
+            {/* Real Mario Character Walking and Pushing */}
+            <MarioCharacter isPushing={marioPushing} />
+
             {stats.map((stat, index) => (
               <motion.div
                 key={index}
