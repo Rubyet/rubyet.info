@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { getYearsOfExperience } from '../../utils/dateUtils';
 import './About.css';
 
 const About = () => {
@@ -9,11 +10,34 @@ const About = () => {
     threshold: 0.1,
   });
 
+  const yearsOfExperience = getYearsOfExperience();
+
+  const [githubStats, setGithubStats] = useState({
+    repos: '18+',
+    followers: '...',
+  });
+
+  useEffect(() => {
+    // Fetch GitHub stats dynamically
+    fetch('https://api.github.com/users/Rubyet')
+      .then(response => response.json())
+      .then(data => {
+        setGithubStats({
+          repos: data.public_repos || '18+',
+          followers: data.followers || '...',
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching GitHub stats:', error);
+        // Keep default values on error
+      });
+  }, []);
+
   const stats = [
-    { number: '1,200+', label: 'XP Points (GitHub Contributions)', icon: '⚡' },
-    { number: '18+', label: 'Completed Quests (Repositories)', icon: '🎮' },
-    { number: '9+', label: 'Boss Fights Won (Major Projects)', icon: '🏆' },
-    { number: '5+', label: 'Skill Trees Mastered', icon: '🌟' },
+    { number: yearsOfExperience, label: 'Years of Experience', icon: '⚡' },
+    { number: githubStats.repos, label: 'Open Source Projects', icon: '🎮' },
+    { number: '9+', label: 'Major Projects Delivered', icon: '🏆' },
+    { number: githubStats.followers, label: 'GitHub Followers', icon: '🌟' },
   ];
 
   return (
@@ -27,7 +51,7 @@ const About = () => {
         >
           <h2 className="section-title">📖 Character Profile</h2>
           <p className="section-subtitle">
-            Level 5+ Developer | Main Quest: Building The Future
+            Level {yearsOfExperience} Developer | Main Quest: Building The Future
           </p>
         </motion.div>
 
@@ -55,14 +79,14 @@ const About = () => {
               
               <h4>⚔️ My Character Sheet (Skills & Stats)</h4>
               <p>
-                I'm a full-stack developer whose 'skill tree' is heavily invested in <strong>Java (Springboot)</strong>, 
+                I'm a full-stack developer whose 'skill tree' is heavily invested in <strong>Java (Spring Boot)</strong>, 
                 <strong>PHP</strong>, <strong>Laravel</strong>, <strong>JavaScript</strong>, and <strong>Android development</strong>. 
                 I use these skills to build scalable web applications and mobile solutions.
               </p>
               <p>
-                My grind is visible: I've logged over <strong>1,200+ XP points</strong> (GitHub contributions) and 
-                unlocked the <strong>'Arctic Code Vault Contributor'</strong> achievement. Whether it's an e-commerce 
-                platform or a football fixture tracker, I bring dedication and clean code to every quest.
+                With over <strong>{yearsOfExperience} years of experience</strong> in the field, I've contributed to major enterprise 
+                projects including payment gateways, airline booking systems, and dealer management platforms. 
+                Whether it's an e-commerce platform or a mobile app, I bring dedication and clean code to every quest.
               </p>
               
               <h4>🤖 The New Expansion: Embracing AI</h4>

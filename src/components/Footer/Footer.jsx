@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiGithub, FiLinkedin, FiTwitter, FiMail, FiHeart } from 'react-icons/fi';
+import { FiGithub, FiLinkedin, FiFacebook, FiMail, FiHeart } from 'react-icons/fi';
 import './Footer.css';
 
 const Footer = () => {
@@ -8,8 +8,8 @@ const Footer = () => {
   const socialLinks = [
     { icon: <FiGithub />, url: 'https://github.com/Rubyet', label: 'GitHub' },
     { icon: <FiLinkedin />, url: 'https://www.linkedin.com/in/rubyethossain', label: 'LinkedIn' },
-    { icon: <FiTwitter />, url: 'https://www.facebook.com/rubyethossain.rittick', label: 'Facebook' },
-    { icon: <FiMail />, url: 'mailto:rubyet.hossain@example.com', label: 'Email' },
+    { icon: <FiFacebook />, url: 'https://www.facebook.com/rubyethossain.rittick/', label: 'Facebook' },
+    { icon: <FiMail />, url: 'mailto:rittick.2012@gmail.com', label: 'Email' },
   ];
 
   const quickLinks = [
@@ -71,9 +71,15 @@ const Footer = () => {
           <div className="footer-section">
             <h4 className="footer-title">Get In Touch</h4>
             <ul className="footer-contact">
-              <li>rubyet.hossain@example.com</li>
-              <li>github.com/Rubyet</li>
-              <li>Dhaka, Bangladesh</li>
+              <li>
+                <a href="mailto:rittick.2012@gmail.com">rittick.2012@gmail.com</a>
+              </li>
+              <li>
+                <a href="https://github.com/Rubyet" target="_blank" rel="noopener noreferrer">
+                  github.com/Rubyet
+                </a>
+              </li>
+              <li>📍 Dhaka, Bangladesh</li>
             </ul>
           </div>
         </div>

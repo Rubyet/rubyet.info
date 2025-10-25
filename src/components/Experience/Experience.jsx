@@ -2,10 +2,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { FiBriefcase, FiCalendar } from 'react-icons/fi';
+import { getYearsOfExperience } from '../../utils/dateUtils';
 import './Experience.css';
 import { experienceData } from '../../data/experienceData.jsx';
 
 const Experience = () => {
+  const yearsOfExperience = getYearsOfExperience();
+  
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -21,7 +24,7 @@ const Experience = () => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="section-title">💼 Campaign History</h2>
-          <p className="section-subtitle">5+ years of leveling up in the tech MMO</p>
+          <p className="section-subtitle">{yearsOfExperience} years of leveling up in the tech MMO</p>
         </motion.div>
 
         <div className="timeline">

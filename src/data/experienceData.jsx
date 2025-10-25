@@ -1,113 +1,88 @@
+import { getYearsOfExperience } from '../utils/dateUtils';
+
 export const experienceData = [
   {
     id: 1,
     position: 'Senior Software Engineer',
-    company: 'Tech Solutions Bangladesh',
-    companyWebsite: 'https://example.com',
+    company: 'Adventure Dhaka Limited',
+    companyWebsite: 'https://adventuredhaka.com',
     location: 'Dhaka, Bangladesh',
-    period: '2023 - Present',
-    duration: '2 years',
+    period: 'April 2023 - Present',
+    duration: '1+ years',
     employmentType: 'Full-time',
-    description: 'Leading development of enterprise-level web applications and mentoring junior developers. Focusing on building scalable, maintainable solutions using modern tech stack.',
+    description: 'Designing and implementing scalable microservices to improve system performance and maintainability. Leading feature planning and promoting clean architecture.',
     achievements: [
-      'Architected and implemented microservices architecture reducing system latency by 40%',
-      'Led a team of 5 developers in delivering critical features ahead of schedule',
-      'Implemented CI/CD pipeline using GitHub Actions improving deployment efficiency by 60%',
-      'Mentored 3 junior developers helping them advance to mid-level positions',
-      'Reduced application bundle size by 35% through code splitting and optimization',
-      'Implemented real-time notification system serving 50,000+ active users'
+      'Designed and implemented scalable microservices to improve system performance and maintainability',
+      'Architected and containerized services for seamless deployment using Docker and Kubernetes',
+      'Optimized cloud scalability and efficiency across distributed systems',
+      'Collaborated with frontend and mobile development teams to ensure smooth API integration',
+      'Led feature planning and system design discussions',
+      'Promoted clean architecture and agile workflows across the development team'
     ],
     responsibilities: [
-      'Design and develop scalable web applications',
-      'Code review and quality assurance',
-      'Mentor junior developers and conduct training sessions',
-      'Collaborate with product team on feature planning',
-      'Optimize application performance and user experience'
+      'Design and implement scalable microservices architecture',
+      'Containerize services using Docker and Kubernetes',
+      'Lead feature planning and system design discussions',
+      'Ensure end-to-end feature delivery with cross-functional teams',
+      'Promote clean architecture and agile development practices'
     ],
-    technologies: ['React', 'Laravel', 'Node.js', 'MySQL', 'Redis', 'Docker', 'AWS', 'Git'],
+    technologies: ['Spring Boot', 'Docker', 'Kubernetes', 'AWS', 'Microservices', 'REST API', 'Git'],
     icon: '💼'
   },
   {
     id: 2,
-    position: 'Full Stack Developer',
-    company: 'Digital Innovation Lab',
-    companyWebsite: 'https://example.com',
+    position: 'Software Engineer',
+    company: 'Workspace InfoTech Limited',
+    companyWebsite: 'https://workspaceinfotech.com',
     location: 'Dhaka, Bangladesh',
-    period: '2021 - 2023',
-    duration: '2 years',
+    period: 'November 2020 - March 2023',
+    duration: '2+ years',
     employmentType: 'Full-time',
-    description: 'Built and maintained full-stack applications using PHP, Laravel, and modern JavaScript frameworks. Worked on various client projects delivering high-quality solutions.',
+    description: 'Developed and maintained stable web applications with improved user experience. Contributed to both backend and frontend development as part of a collaborative team.',
     achievements: [
-      'Developed 15+ responsive web applications serving 100K+ monthly active users',
-      'Optimized database queries reducing response time by 50%',
-      'Implemented RESTful APIs consumed by mobile applications',
-      'Collaborated with designers to create pixel-perfect UI implementations',
-      'Integrated payment gateways (bKash, Nagad, SSL Commerz) for e-commerce platforms',
-      'Built admin dashboards with real-time analytics and reporting'
+      'Developed and maintained stable web applications with improved user experience',
+      'Delivered client-requested features with careful testing and code reviews',
+      'Diagnosed and resolved performance issues, improving overall reliability and efficiency',
+      'Contributed to both backend and frontend development',
+      'Worked as part of a collaborative, cross-functional team',
+      'Maintained high code quality standards through peer reviews'
     ],
     responsibilities: [
-      'Develop full-stack web applications using Laravel and React',
-      'Design and implement RESTful APIs',
-      'Database design and optimization',
-      'Write clean, maintainable code following best practices',
-      'Participate in agile sprints and daily standups'
+      'Develop and maintain web applications',
+      'Implement client-requested features',
+      'Conduct code reviews and testing',
+      'Diagnose and resolve performance issues',
+      'Collaborate with cross-functional teams'
     ],
-    technologies: ['Laravel', 'PHP', 'Vue.js', 'MySQL', 'Bootstrap', 'jQuery', 'Git', 'Linux'],
+    technologies: ['PHP', 'Laravel', 'JavaScript', 'MySQL', 'Vue.js', 'REST API', 'Git'],
     icon: '🚀'
   },
   {
     id: 3,
-    position: 'Software Engineer',
-    company: 'Web Development Agency',
-    companyWebsite: 'https://example.com',
+    position: 'Web Developer Intern',
+    company: 'No Borders IT',
+    companyWebsite: 'https://nobordersit.com',
     location: 'Dhaka, Bangladesh',
-    period: '2020 - 2021',
-    duration: '1 year',
-    employmentType: 'Full-time',
-    description: 'Developed web applications and mobile apps for various clients. Worked on e-commerce platforms, booking systems, and content management systems.',
+    period: 'February 2020 - May 2020',
+    duration: '4 months',
+    employmentType: 'Internship',
+    description: 'Enhanced UI/UX for B2B and B2C travel platforms. Integrated external APIs and supported development and QA processes.',
     achievements: [
-      'Built 10+ client projects from concept to deployment',
-      'Developed Android application using Kotlin with 5,000+ downloads',
-      'Integrated third-party APIs (Google Maps, SMS Gateway, Payment APIs)',
-      'Improved application performance through code optimization',
-      'Participated in client meetings and requirement gathering',
-      'Maintained 98% project delivery success rate'
+      'Enhanced UI/UX for B2B and B2C travel platforms to improve user experience',
+      'Integrated external APIs for booking functionality',
+      'Supported development and QA processes',
+      'Helped maintain responsive UI across different devices',
+      'Contributed ideas during client review and design sessions',
+      'Learned industry best practices for travel technology platforms'
     ],
     responsibilities: [
-      'Develop web and mobile applications',
-      'Write clean, efficient code',
-      'Collaborate with team members on project delivery',
-      'Bug fixing and application maintenance',
-      'Client communication and support'
+      'Enhance UI/UX for travel platforms',
+      'Integrate external booking APIs',
+      'Support development and QA testing',
+      'Maintain responsive user interfaces',
+      'Participate in client reviews and design sessions'
     ],
-    technologies: ['PHP', 'Laravel', 'Kotlin', 'MySQL', 'JavaScript', 'HTML/CSS', 'Git'],
-    icon: '💻'
-  },
-  {
-    id: 4,
-    position: 'Junior Web Developer',
-    company: 'Startup Dhaka',
-    companyWebsite: 'https://example.com',
-    location: 'Dhaka, Bangladesh',
-    period: '2019 - 2020',
-    duration: '1 year',
-    employmentType: 'Full-time',
-    description: 'Started professional career as a web developer. Learned industry best practices and worked on various web development projects.',
-    achievements: [
-      'Developed responsive websites using HTML, CSS, and JavaScript',
-      'Created dynamic web applications with PHP and MySQL',
-      'Collaborated with senior developers on large projects',
-      'Fixed bugs and improved existing codebases',
-      'Learned Laravel framework and built first Laravel project'
-    ],
-    responsibilities: [
-      'Develop frontend interfaces',
-      'Implement backend functionality',
-      'Test and debug applications',
-      'Learn new technologies and frameworks',
-      'Assist senior developers in project development'
-    ],
-    technologies: ['PHP', 'MySQL', 'JavaScript', 'jQuery', 'Bootstrap', 'HTML5', 'CSS3'],
+    technologies: ['HTML', 'CSS', 'JavaScript', 'PHP', 'MySQL', 'API Integration', 'Bootstrap'],
     icon: '🌱'
   }
 ];
@@ -141,7 +116,7 @@ export const freelanceExperience = {
 
 // Professional summary
 export const professionalSummary = {
-  totalExperience: '5+ years',
+  totalExperience: getYearsOfExperience(),
   specialization: 'Full Stack Web Development',
   expertise: [
     'Laravel & PHP Backend Development',
