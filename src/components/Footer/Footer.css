@@ -156,12 +156,34 @@
   font-family: 'Inter', sans-serif;
 }
 
+.footer-contact li {
+  transition: all 0.3s ease;
+}
+
+.footer-contact a {
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
 .dark-mode .footer-contact li {
   color: rgba(255, 255, 255, 0.7);
 }
 
 .light-mode .footer-contact li {
   color: rgba(0, 0, 0, 0.7);
+}
+
+.dark-mode .footer-contact a {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.light-mode .footer-contact a {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.footer-contact a:hover {
+  color: #667eea;
+  transform: translateX(3px);
 }
 
 .footer-bottom {

@@ -1,10 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
-import { FiGithub, FiLinkedin, FiMail, FiArrowDown } from 'react-icons/fi';
+import { FiGithub, FiLinkedin, FiFacebook, FiMail } from 'react-icons/fi';
+import { getYearsOfExperience } from '../../utils/dateUtils';
 import './Hero.css';
 
 const Hero = () => {
+  const yearsOfExperience = getYearsOfExperience();
+  
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
@@ -70,7 +73,7 @@ const Hero = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
           >
-            <span className="status-text">Status:</span> On a quest to build scalable applications & conquer the tech industry's ultimate MMO
+            <span className="status-text">Status:</span> {yearsOfExperience} years on a quest to build scalable applications & conquer the tech industry's ultimate MMO
             <br />
             <span className="location-text">📍 Home Base:</span> <span className="highlight">Dhaka, Bangladesh</span>
             <br />
@@ -113,6 +116,7 @@ const Hero = () => {
               rel="noopener noreferrer"
               whileHover={{ scale: 1.2, y: -5 }}
               className="social-link"
+              title="GitHub Profile"
             >
               <FiGithub />
             </motion.a>
@@ -122,36 +126,29 @@ const Hero = () => {
               rel="noopener noreferrer"
               whileHover={{ scale: 1.2, y: -5 }}
               className="social-link"
+              title="LinkedIn Profile"
             >
               <FiLinkedin />
             </motion.a>
             <motion.a
-              href="https://www.facebook.com/rubyethossain.rittick"
+              href="https://www.facebook.com/rubyethossain.rittick/"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.2, y: -5 }}
               className="social-link"
+              title="Facebook Profile"
+            >
+              <FiFacebook />
+            </motion.a>
+            <motion.a
+              href="mailto:rittick.2012@gmail.com"
+              whileHover={{ scale: 1.2, y: -5 }}
+              className="social-link"
+              title="Send Email"
             >
               <FiMail />
             </motion.a>
           </motion.div>
-        </motion.div>
-
-        <motion.div
-          className="hero-scroll-indicator"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5 }}
-            className="scroll-icon"
-            onClick={() => scrollToSection('about')}
-          >
-            <FiArrowDown />
-          </motion.div>
-          <span>Scroll Down</span>
         </motion.div>
 
         {/* Animated Background Elements */}

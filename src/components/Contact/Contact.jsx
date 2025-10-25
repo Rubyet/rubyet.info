@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { FiMail, FiPhone, FiMapPin, FiSend } from 'react-icons/fi';
+import emailjs from '@emailjs/browser';
 import './Contact.css';
 
 const Contact = () => {
@@ -9,6 +10,8 @@ const Contact = () => {
     triggerOnce: true,
     threshold: 0.1,
   });
+
+  const formRef = useRef();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -18,6 +21,7 @@ const Contact = () => {
   });
 
   const [status, setStatus] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,22 +29,54 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus('Sending...');
+    setIsLoading(true);
+    setStatus('Sending your message...');
     
-    // Simulate form submission
-    setTimeout(() => {
-      setStatus('Message sent successfully!');
+    try {
+      // EmailJS configuration
+      // Sign up at https://www.emailjs.com/ and replace these with your credentials
+      const serviceId = 'YOUR_SERVICE_ID'; // Replace with your EmailJS service ID
+      const templateId = 'YOUR_TEMPLATE_ID'; // Replace with your EmailJS template ID
+      const publicKey = 'YOUR_PUBLIC_KEY'; // Replace with your EmailJS public key
+
+      // Template params that will be sent to your email
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+        to_email: 'rittick.2012@gmail.com', // Your email
+      };
+
+      await emailjs.send(
+        serviceId,
+        templateId,
+        templateParams,
+        publicKey
+      );
+
+      setStatus('✅ Message sent successfully! I\'ll get back to you soon.');
       setFormData({ name: '', email: '', subject: '', message: '' });
-      setTimeout(() => setStatus(''), 3000);
-    }, 1000);
+      setIsLoading(false);
+      
+      // Clear status after 5 seconds
+      setTimeout(() => setStatus(''), 5000);
+    } catch (error) {
+      console.error('EmailJS Error:', error);
+      setStatus('❌ Failed to send message. Please email me directly at rittick.2012@gmail.com');
+      setIsLoading(false);
+      
+      // Clear error status after 7 seconds
+      setTimeout(() => setStatus(''), 7000);
+    }
   };
 
   const contactInfo = [
     {
       icon: <FiMail />,
       title: 'Email',
-      value: 'rubyet.hossain@example.com',
-      link: 'mailto:rubyet.hossain@example.com',
+      value: 'rittick.2012@gmail.com',
+      link: 'mailto:rittick.2012@gmail.com',
     },
     {
       icon: <FiPhone />,
@@ -112,7 +148,7 @@ const Contact = () => {
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <form className="contact-form" onSubmit={handleSubmit}>
+            <form ref={formRef} className="contact-form" onSubmit={handleSubmit}>
               <div className="form-group">
                 <input
                   type="text"
@@ -122,6 +158,7 @@ const Contact = () => {
                   onChange={handleChange}
                   required
                   className="form-input"
+                  disabled={isLoading}
                 />
               </div>
               <div className="form-group">
@@ -133,6 +170,7 @@ const Contact = () => {
                   onChange={handleChange}
                   required
                   className="form-input"
+                  disabled={isLoading}
                 />
               </div>
               <div className="form-group">
@@ -144,6 +182,7 @@ const Contact = () => {
                   onChange={handleChange}
                   required
                   className="form-input"
+                  disabled={isLoading}
                 />
               </div>
               <div className="form-group">
@@ -155,17 +194,27 @@ const Contact = () => {
                   required
                   className="form-input"
                   rows="6"
+                  disabled={isLoading}
                 />
               </div>
               <motion.button
                 type="submit"
                 className="submit-btn"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: isLoading ? 1 : 1.05 }}
+                whileTap={{ scale: isLoading ? 1 : 0.95 }}
+                disabled={isLoading}
               >
-                Send Message <FiSend />
+                {isLoading ? 'Sending...' : 'Send Message'} <FiSend />
               </motion.button>
-              {status && <p className="form-status">{status}</p>}
+              {status && (
+                <motion.p
+                  className={`form-status ${status.includes('✅') ? 'success' : status.includes('❌') ? 'error' : ''}`}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  {status}
+                </motion.p>
+              )}
             </form>
           </motion.div>
         </div>

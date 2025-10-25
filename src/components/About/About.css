@@ -171,7 +171,24 @@
   position: sticky;
   top: 120px;
   height: fit-content;
-  position: relative;
+  animation: floatingStats 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Gentle floating animation when stationary */
+@keyframes floatingStats {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  25% {
+    transform: translateY(-8px) translateX(3px);
+  }
+  50% {
+    transform: translateY(-4px) translateX(-3px);
+  }
+  75% {
+    transform: translateY(-10px) translateX(2px);
+  }
 }
 
 .stat-card {
@@ -351,6 +368,9 @@
   .about-stats {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
+    position: relative;
+    top: 0;
+    animation: none;
   }
 
   .stat-card {
@@ -436,6 +456,7 @@
     gap: 1rem;
     position: relative;
     top: 0;
+    animation: none;
   }
 
   .stat-card {
