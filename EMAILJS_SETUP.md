@@ -55,21 +55,27 @@ This message was sent from your portfolio contact form.
 
 ### Step 5: Update Your Code
 
-Open `src/components/Contact/Contact.jsx` and replace these lines (around line 36-38):
+Open `.env.local` file in the root directory and replace the placeholder values:
 
-```javascript
-const serviceId = 'YOUR_SERVICE_ID'; // Replace with your EmailJS service ID
-const templateId = 'YOUR_TEMPLATE_ID'; // Replace with your EmailJS template ID
-const publicKey = 'YOUR_PUBLIC_KEY'; // Replace with your EmailJS public key
+```env
+REACT_APP_EMAILJS_SERVICE_ID=service_xxxxxxx
+REACT_APP_EMAILJS_TEMPLATE_ID=template_yyyyyyy
+REACT_APP_EMAILJS_PUBLIC_KEY=zzzzzzzzzzzzzzzzz
 ```
 
 With your actual credentials:
 
-```javascript
-const serviceId = 'service_xxxxxxx'; // Your Service ID from Step 2
-const templateId = 'template_yyyyyyy'; // Your Template ID from Step 3
-const publicKey = 'zzzzzzzzzzzzzzzzz'; // Your Public Key from Step 4
+```env
+REACT_APP_EMAILJS_SERVICE_ID=service_abc1234  # Your Service ID from Step 2
+REACT_APP_EMAILJS_TEMPLATE_ID=template_xyz789  # Your Template ID from Step 3
+REACT_APP_EMAILJS_PUBLIC_KEY=AbCdEfGhIjKlMnOp  # Your Public Key from Step 4
 ```
+
+**Important Notes:**
+- The `.env.local` file is already in `.gitignore` - your credentials are safe and won't be committed to Git
+- The `.env` file contains example placeholders and can be committed to Git
+- All environment variables must start with `REACT_APP_` to be accessible in React
+- After updating `.env.local`, restart your development server (`npm start`)
 
 ### Step 6: Test Your Contact Form
 
@@ -131,11 +137,24 @@ The free plan is perfect for a portfolio website!
 
 ## 🔒 Security Note
 
-The credentials in your code (Service ID, Template ID, Public Key) are meant to be public - they're safe to commit to GitHub. EmailJS uses these along with domain restrictions to prevent abuse.
+Your credentials are now stored securely in `.env.local` which is:
+- ✅ **Already in `.gitignore`** - won't be committed to GitHub
+- ✅ **Only on your local machine** - safe from public access
+- ✅ **Separate from code** - following security best practices
 
-For added security, you can:
+The `.env` file (with placeholders) can be safely committed as a template for others.
+
+For production deployment:
+1. Add your environment variables to your hosting platform (Vercel, Netlify, etc.)
+2. Set the same three variables:
+   - `REACT_APP_EMAILJS_SERVICE_ID`
+   - `REACT_APP_EMAILJS_TEMPLATE_ID`
+   - `REACT_APP_EMAILJS_PUBLIC_KEY`
+
+For added security, you can also:
 1. Go to EmailJS dashboard > Security
 2. Add allowed domains (e.g., `rubyet.info`, `localhost`)
+3. This prevents unauthorized use of your credentials
 
 ---
 

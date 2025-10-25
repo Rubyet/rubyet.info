@@ -33,11 +33,15 @@ const Contact = () => {
     setStatus('Sending your message...');
     
     try {
-      // EmailJS configuration
-      // Sign up at https://www.emailjs.com/ and replace these with your credentials
-      const serviceId = 'YOUR_SERVICE_ID'; // Replace with your EmailJS service ID
-      const templateId = 'YOUR_TEMPLATE_ID'; // Replace with your EmailJS template ID
-      const publicKey = 'YOUR_PUBLIC_KEY'; // Replace with your EmailJS public key
+      // EmailJS configuration from environment variables
+      const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID;
+      const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
+      const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
+
+      // Check if credentials are configured
+      if (!serviceId || !templateId || !publicKey) {
+        throw new Error('EmailJS credentials not configured. Please check your .env.local file.');
+      }
 
       // Template params that will be sent to your email
       const templateParams = {
