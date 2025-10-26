@@ -49,7 +49,7 @@ const Contact = () => {
         from_email: formData.email,
         subject: formData.subject,
         message: formData.message,
-        to_email: 'rittick.2012@gmail.com', // Your email
+        to_email: 'rittick.2012@gmail.com',
       };
 
       await emailjs.send(

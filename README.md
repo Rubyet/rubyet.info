@@ -52,12 +52,24 @@ A highly modern, fully responsive React portfolio website showcasing a 5-year so
    npm install
    ```
 
-2. **Start the development server**
+2. **Configure Environment Variables (for Contact Form)**
+   
+   Copy `.env.local` and add your EmailJS credentials:
+   ```bash
+   # Open .env.local and add:
+   REACT_APP_EMAILJS_SERVICE_ID=your_service_id
+   REACT_APP_EMAILJS_TEMPLATE_ID=your_template_id
+   REACT_APP_EMAILJS_PUBLIC_KEY=your_public_key
+   ```
+   
+   📖 **See [EMAILJS_SETUP.md](EMAILJS_SETUP.md)** for complete EmailJS setup instructions
+
+3. **Start the development server**
    ```bash
    npm start
    ```
 
-3. **Build for production**
+4. **Build for production**
    ```bash
    npm run build
    ```
@@ -106,13 +118,20 @@ This project is configured for automatic deployment via GitHub Actions!
 3. ✅ Updates live website
 
 **Setup Instructions:**
-1. Add GitHub Secrets (Settings → Secrets → Actions):
+
+1. **Add FTP Credentials** (Settings → Secrets → Actions):
    - `FTP_USERNAME`: Your FTP username
    - `FTP_PASSWORD`: Your FTP password
-2. Push to master branch
-3. Check Actions tab for deployment status
 
-📖 **See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for detailed instructions**
+2. **Add EmailJS Credentials** (Settings → Secrets → Actions):
+   - `REACT_APP_EMAILJS_SERVICE_ID`: Your EmailJS service ID
+   - `REACT_APP_EMAILJS_TEMPLATE_ID`: Your EmailJS template ID
+   - `REACT_APP_EMAILJS_PUBLIC_KEY`: Your EmailJS public key
+
+3. Push to master branch
+4. Check Actions tab for deployment status
+
+📖 **See [PRODUCTION_SETUP.md](PRODUCTION_SETUP.md) for step-by-step GitHub secrets configuration**
 
 ### Alternative Deployment Options
 
