@@ -2,16 +2,15 @@ export const educationData = [
   {
     id: 1,
     degree: "Bachelor of Science in Computer Science",
-    institution: "Your University Name",
+    institution: "American International University-Bangladesh (AIUB)",
     location: "Dhaka, Bangladesh",
-    period: "2015 - 2019",
-    grade: "CGPA: 3.75/4.00",
+    period: "2017 - 2020",
+    grade: "CGPA: 3.82/4.00",
     description: "Focused on Software Engineering, Web Development, and Database Management Systems.",
     highlights: [
       "Graduated with First Class Honors",
-      "Dean's List for academic excellence",
-      "Final Year Project: [Your Project Name]",
-      "Active member of Programming Club"
+      "Final Year Thesis: Analysis of centralized payment eco-system: A systematic review on e-payments",
+      "3 Publications in Journals and Conferences"
     ],
     courses: [
       "Data Structures & Algorithms",
@@ -21,15 +20,15 @@ export const educationData = [
       "Software Engineering",
       "Computer Networks"
     ],
-    logo: "/img/university-logo.png", // Add your university logo
+    logo: "/img/aiub.png", // Add your university logo
     color: "#6366f1" // University brand color
   },
   {
     id: 2,
     degree: "Higher Secondary Certificate (HSC)",
-    institution: "Your College Name",
+    institution: "Dhaka Imperial College",
     location: "Dhaka, Bangladesh",
-    period: "2013 - 2015",
+    period: "2014 - 2016",
     grade: "GPA: 5.00/5.00",
     description: "Science background with focus on Mathematics, Physics, and Chemistry.",
     highlights: [
@@ -43,20 +42,19 @@ export const educationData = [
       "Chemistry",
       "ICT (Information & Communication Technology)"
     ],
-    logo: "/img/college-logo.png",
+    logo: "/img/imperial.jpg",
     color: "#8b5cf6"
   },
   {
     id: 3,
     degree: "Secondary School Certificate (SSC)",
-    institution: "Your School Name",
+    institution: "Ideal School and College",
     location: "Dhaka, Bangladesh",
-    period: "2011 - 2013",
+    period: "2004 - 2014",
     grade: "GPA: 5.00/5.00",
     description: "Science background with excellent academic performance.",
     highlights: [
       "Golden GPA recipient",
-      "Talent pool scholarship",
       "Best student award"
     ],
     courses: [
@@ -65,7 +63,7 @@ export const educationData = [
       "English",
       "ICT"
     ],
-    logo: "/img/school-logo.png",
+    logo: "/img/ideal.jpeg",
     color: "#ec4899"
   }
 ];

@@ -5,10 +5,10 @@ export const experienceData = [
     id: 1,
     position: 'Senior Software Engineer',
     company: 'Adventure Dhaka Limited',
-    companyWebsite: 'https://adventuredhaka.com',
+    companyWebsite: 'https://adventurekk.com',
     location: 'Dhaka, Bangladesh',
     period: 'April 2023 - Present',
-    duration: '1+ years',
+    duration: '2+ years',
     employmentType: 'Full-time',
     description: 'Designing and implementing scalable microservices to improve system performance and maintainability. Leading feature planning and promoting clean architecture.',
     achievements: [
@@ -33,7 +33,7 @@ export const experienceData = [
     id: 2,
     position: 'Software Engineer',
     company: 'Workspace InfoTech Limited',
-    companyWebsite: 'https://workspaceinfotech.com',
+    companyWebsite: 'https://www.workspaceit.com/',
     location: 'Dhaka, Bangladesh',
     period: 'November 2020 - March 2023',
     duration: '2+ years',
@@ -119,11 +119,12 @@ export const professionalSummary = {
   totalExperience: getYearsOfExperience(),
   specialization: 'Full Stack Web Development',
   expertise: [
+    'Java (Spring Boot)',
+    'Microservices Architecture',
     'Laravel & PHP Backend Development',
     'React & Vue.js Frontend Development',
     'RESTful API Design & Development',
     'Database Design & Optimization',
-    'Mobile App Development (Kotlin)',
     'DevOps & CI/CD Implementation'
   ],
   projectsCompleted: '50+',
@@ -132,6 +133,9 @@ export const professionalSummary = {
     'Building scalable microservices',
     'Cloud infrastructure (AWS)',
     'Modern JavaScript frameworks',
-    'Performance optimization'
+    'Performance optimization',
+    'AI integration in web applications',
+    'Cross-platform development',
+    'AI-driven solutions'
   ]
 };
