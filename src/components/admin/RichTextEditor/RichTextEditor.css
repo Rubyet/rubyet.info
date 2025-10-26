@@ -1,0 +1,80 @@
+.rich-text-editor {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.rich-text-editor .quill {
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+}
+
+.rich-text-editor .ql-toolbar {
+  background: #f8f9fa;
+  border: none;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 12px;
+}
+
+.rich-text-editor .ql-container {
+  flex: 1;
+  border: none;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  overflow-y: auto;
+}
+
+.rich-text-editor .ql-editor {
+  padding: 20px;
+  min-height: 100%;
+}
+
+.rich-text-editor .ql-editor.ql-blank::before {
+  color: #94a3b8;
+  font-style: normal;
+}
+
+/* Syntax highlighting for code blocks */
+.rich-text-editor .ql-editor pre.ql-syntax {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  padding: 16px;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+/* Image styling */
+.rich-text-editor .ql-editor img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+/* Link styling */
+.rich-text-editor .ql-editor a {
+  color: #6366f1;
+  text-decoration: underline;
+}
+
+/* Blockquote styling */
+.rich-text-editor .ql-editor blockquote {
+  border-left: 4px solid #6366f1;
+  padding-left: 16px;
+  margin: 16px 0;
+  color: #64748b;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .rich-text-editor .quill {
+    height: 400px;
+  }
+  
+  .rich-text-editor .ql-editor {
+    padding: 12px;
+    font-size: 14px;
+  }
+}

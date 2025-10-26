@@ -1,0 +1,115 @@
+.image-upload-container {
+  margin-bottom: 24px;
+}
+
+.image-upload-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 14px;
+}
+
+.image-upload-dropzone {
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #f8f9fa;
+}
+
+.image-upload-dropzone:hover {
+  border-color: #6366f1;
+  background: #f1f5f9;
+}
+
+.image-upload-dropzone.dragging {
+  border-color: #6366f1;
+  background: #eef2ff;
+  transform: scale(1.02);
+}
+
+.upload-icon {
+  color: #64748b;
+  margin-bottom: 16px;
+}
+
+.upload-text {
+  color: #1e293b;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.upload-hint {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.image-preview-container {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.image-preview {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  display: block;
+}
+
+.image-remove-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.image-remove-button:hover {
+  background: #dc2626;
+  transform: scale(1.1);
+}
+
+.image-change-button {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(99, 102, 241, 0.9);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.image-change-button:hover {
+  background: #4f46e5;
+}
+
+@media (max-width: 768px) {
+  .image-upload-dropzone {
+    padding: 24px;
+  }
+  
+  .image-preview {
+    max-height: 250px;
+  }
+}
