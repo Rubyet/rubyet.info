@@ -93,6 +93,14 @@
   color: #fff;
   box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
   transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.education-logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .education-card:hover .education-logo {

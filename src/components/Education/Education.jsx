@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { FiAward, FiBookOpen, FiCalendar, FiMapPin, FiStar, FiCheckCircle } from 'react-icons/fi';
@@ -10,6 +10,12 @@ const Education = () => {
     triggerOnce: true,
     threshold: 0.1,
   });
+
+  const [imageErrors, setImageErrors] = useState({});
+
+  const handleImageError = (eduId) => {
+    setImageErrors(prev => ({ ...prev, [eduId]: true }));
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -71,7 +77,16 @@ const Education = () => {
                       style={{ '--brand-color': edu.color }}
                     >
                       <div className="education-logo">
-                        <FiBookOpen size={32} />
+                        {edu.logo && !imageErrors[edu.id] ? (
+                          <img 
+                            src={`${process.env.PUBLIC_URL}${edu.logo}`}
+                            alt={`${edu.institution} logo`}
+                            className="education-logo-image"
+                            onError={() => handleImageError(edu.id)}
+                          />
+                        ) : (
+                          <FiBookOpen size={32} />
+                        )}
                       </div>
                     </div>
                     {index !== educationData.length - 1 && (
