@@ -27,26 +27,30 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
           
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps
+      - name: Install Frontend dependencies
+        run: cd frontend && npm install --legacy-peer-deps
         
-      - name: Build project
-        run: npm run build
+      - name: Install Backend dependencies
+        run: cd backend && npm install
+        
+      - name: Build Frontend
+        run: cd frontend && npm run build
         env:
           CI: false
           NODE_OPTIONS: "--max_old_space_size=4096"
           REACT_APP_EMAILJS_SERVICE_ID: ${{ secrets.REACT_APP_EMAILJS_SERVICE_ID }}
           REACT_APP_EMAILJS_TEMPLATE_ID: ${{ secrets.REACT_APP_EMAILJS_TEMPLATE_ID }}
           REACT_APP_EMAILJS_PUBLIC_KEY: ${{ secrets.REACT_APP_EMAILJS_PUBLIC_KEY }}
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
           
-      - name: Deploy to FTP
+      - name: Deploy Frontend to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: rubyet.info
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
-          local-dir: ./build/
+          local-dir: ./frontend/build/
           server-dir: ./
           dangerous-clean-slate: false
           exclude: |
@@ -56,12 +60,36 @@ jobs:
             **/.vscode/**
             **/README.md
             
+      - name: Deploy Backend to FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: rubyet.info
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          local-dir: ./backend/
+          server-dir: ./backend/
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.vscode/**
+            **/README.md
+            **/.env
+            **/data/**
+            
       - name: Deployment Success Notification
         if: success()
         run: |
           echo "✅ Deployment successful!"
           echo "🚀 Your portfolio is now live!"
-          echo "📊 Build size: $(du -sh build | cut -f1)"
+          echo "📊 Frontend build size: $(du -sh frontend/build 2>/dev/null | cut -f1 || echo 'N/A')"
+          echo "📦 Backend deployed to /backend/"
+          echo "⚠️  Remember to:"
+          echo "   1. Run 'npm install' in the backend folder on your server"
+          echo "   2. Set up environment variables (.env) on your server"
+          echo "   3. Start the backend server (node server.js or use PM2)"
           
       - name: Deployment Failed Notification
         if: failure()
