@@ -15,7 +15,7 @@ import {
   FiMoon
 } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
-import * as blogService from '../services/blogService';
+import * as blogService from '../services/apiService';
 import './AdminBlog.css';
 
 const AdminBlog = ({ darkMode, toggleTheme }) => {
@@ -28,24 +28,33 @@ const AdminBlog = ({ darkMode, toggleTheme }) => {
   const { logout, session } = useAuth();
   const navigate = useNavigate();
 
-  const loadData = React.useCallback(() => {
+  const loadData = React.useCallback(async () => {
     setLoading(true);
-    const loadedPosts = blogService.getAllPosts(filter);
-    const stats = blogService.getStatistics();
-    setPosts(loadedPosts);
-    setFilteredPosts(loadedPosts);
-    setStatistics(stats);
-    setLoading(false);
+    try {
+      const loadedPosts = await blogService.getAllPosts(filter);
+      const stats = await blogService.getStatistics();
+      setPosts(loadedPosts);
+      setFilteredPosts(loadedPosts);
+      setStatistics(stats);
+    } catch (error) {
+      console.error('Error loading data:', error);
+    } finally {
+      setLoading(false);
+    }
   }, [filter]);
 
-  const handleSearch = React.useCallback(() => {
+  const handleSearch = React.useCallback(async () => {
     if (!searchQuery.trim()) {
       setFilteredPosts(posts);
       return;
     }
 
-    const results = blogService.searchPosts(searchQuery, filter === 'all' ? undefined : filter);
-    setFilteredPosts(results);
+    try {
+      const results = await blogService.searchPosts(searchQuery, filter === 'all' ? undefined : filter);
+      setFilteredPosts(results);
+    } catch (error) {
+      console.error('Error searching posts:', error);
+    }
   }, [searchQuery, posts, filter]);
 
   useEffect(() => {
@@ -56,17 +65,27 @@ const AdminBlog = ({ darkMode, toggleTheme }) => {
     handleSearch();
   }, [handleSearch]);
 
-  const handleDelete = (id, title) => {
+  const handleDelete = async (id, title) => {
     if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
-      blogService.deletePost(id);
-      loadData();
+      try {
+        await blogService.deletePost(id);
+        loadData();
+      } catch (error) {
+        console.error('Error deleting post:', error);
+        alert('Failed to delete post. Please try again.');
+      }
     }
   };
 
-  const handleToggleStatus = (id, currentStatus) => {
+  const handleToggleStatus = async (id, currentStatus) => {
     const newStatus = currentStatus === 'published' ? 'draft' : 'published';
-    blogService.updatePost(id, { status: newStatus });
-    loadData();
+    try {
+      await blogService.updatePost(id, { status: newStatus });
+      loadData();
+    } catch (error) {
+      console.error('Error updating post status:', error);
+      alert('Failed to update post status. Please try again.');
+    }
   };
 
   const handleLogout = () => {

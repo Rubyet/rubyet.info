@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { FiSave, FiArrowLeft, FiEye, FiEyeOff, FiX, FiSun, FiMoon } from 'react-icons/fi';
 import RichTextEditor from '../components/admin/RichTextEditor/RichTextEditor';
 import ImageUpload from '../components/admin/ImageUpload/ImageUpload';
-import * as blogService from '../services/blogService';
+import * as blogService from '../services/apiService';
 import './BlogEditor.css';
 
 const BlogEditor = ({ darkMode, toggleTheme }) => {
@@ -29,23 +29,28 @@ const BlogEditor = ({ darkMode, toggleTheme }) => {
   const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
-    if (isEditMode) {
-      const post = blogService.getPostById(id);
-      if (post) {
-        setFormData({
-          title: post.title,
-          content: post.content,
-          excerpt: post.excerpt || '',
-          coverImage: post.coverImage || '',
-          tags: post.tags || [],
-          seoTitle: post.seoTitle || '',
-          seoDescription: post.seoDescription || '',
-          status: post.status
-        });
-      } else {
-        navigate('/admin/blog');
+    const loadPost = async () => {
+      if (isEditMode) {
+        try {
+          const post = await blogService.getPostById(id);
+          setFormData({
+            title: post.title,
+            content: post.content,
+            excerpt: post.excerpt || '',
+            coverImage: post.coverImage || '',
+            tags: post.tags || [],
+            seoTitle: post.seoTitle || '',
+            seoDescription: post.seoDescription || '',
+            status: post.status
+          });
+        } catch (error) {
+          console.error('Error loading post:', error);
+          alert('Post not found');
+          navigate('/admin/blog');
+        }
       }
-    }
+    };
+    loadPost();
   }, [id, isEditMode, navigate]);
 
   const handleChange = (field, value) => {

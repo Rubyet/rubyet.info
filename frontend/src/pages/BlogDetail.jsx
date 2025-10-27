@@ -12,7 +12,7 @@ import {
   FiTwitter,
   FiFacebook
 } from 'react-icons/fi';
-import * as blogService from '../services/blogService';
+import * as blogService from '../services/apiService';
 import './BlogDetail.css';
 
 const BlogDetail = () => {
@@ -23,15 +23,18 @@ const BlogDetail = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPost = () => {
-      const foundPost = blogService.getPostBySlug(slug);
-      if (foundPost) {
+    const fetchPost = async () => {
+      try {
+        const foundPost = await blogService.getPostBySlug(slug);
         setPost(foundPost);
-        blogService.incrementViews(slug);
-        const related = blogService.getRelatedPosts(slug, 3);
+        await blogService.incrementViews(foundPost.id);
+        const related = await blogService.getRelatedPosts(foundPost.id);
         setRelatedPosts(related);
+      } catch (error) {
+        console.error('Error fetching post:', error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchPost();

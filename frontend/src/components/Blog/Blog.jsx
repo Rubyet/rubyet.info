@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { FiClock, FiArrowRight, FiSearch, FiTag, FiX } from 'react-icons/fi';
 import './Blog.css';
-import * as blogService from '../../services/blogService';
+import * as blogService from '../../services/apiService';
 
 const Blog = () => {
   const [ref, inView] = useInView({
@@ -20,12 +20,19 @@ const Blog = () => {
   const [allTags, setAllTags] = useState([]);
 
   useEffect(() => {
-    const publishedPosts = blogService.getAllPosts('published');
-    setPosts(publishedPosts);
-    setFilteredPosts(publishedPosts);
-    
-    const tags = blogService.getAllTags();
-    setAllTags(tags);
+    const loadData = async () => {
+      try {
+        const publishedPosts = await blogService.getAllPosts('published');
+        setPosts(publishedPosts);
+        setFilteredPosts(publishedPosts);
+        
+        const tags = await blogService.getAllTags();
+        setAllTags(tags);
+      } catch (error) {
+        console.error('Error loading blog data:', error);
+      }
+    };
+    loadData();
   }, []);
 
   useEffect(() => {
@@ -36,19 +43,26 @@ const Blog = () => {
   }, [searchParams]);
 
   useEffect(() => {
-    let result = posts;
+    const filterPosts = async () => {
+      let result = posts;
 
-    // Filter by tag
-    if (selectedTag) {
-      result = blogService.getPostsByTag(selectedTag);
-    }
+      try {
+        // Filter by tag
+        if (selectedTag) {
+          result = await blogService.getPostsByTag(selectedTag);
+        }
 
-    // Filter by search
-    if (searchQuery.trim()) {
-      result = blogService.searchPosts(searchQuery, 'published');
-    }
+        // Filter by search
+        if (searchQuery.trim()) {
+          result = await blogService.searchPosts(searchQuery, 'published');
+        }
 
-    setFilteredPosts(result);
+        setFilteredPosts(result);
+      } catch (error) {
+        console.error('Error filtering posts:', error);
+      }
+    };
+    filterPosts();
   }, [selectedTag, searchQuery, posts]);
 
   const handleTagClick = (tag) => {
@@ -113,13 +127,13 @@ const Blog = () => {
             <div className="tags-filter">
               <FiTag />
               <div className="tags-list">
-                {allTags.map(tag => (
+                {allTags.map(tagObj => (
                   <button
-                    key={tag}
-                    onClick={() => handleTagClick(tag)}
-                    className={`tag-button ${selectedTag === tag ? 'active' : ''}`}
+                    key={tagObj.tag}
+                    onClick={() => handleTagClick(tagObj.tag)}
+                    className={`tag-button ${selectedTag === tagObj.tag ? 'active' : ''}`}
                   >
-                    {tag}
+                    {tagObj.tag} ({tagObj.count})
                   </button>
                 ))}
               </div>
