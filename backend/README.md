@@ -110,14 +110,16 @@ After deploying via GitHub Actions:
    - Click **"Create Application"**
    - **Node.js version**: Choose latest (18.x or higher)
    - **Application mode**: Production
-   - **Application root**: `backend`
-   - **Application URL**: `backend` (or subdomain if preferred)
+   - **Application root**: `public_html/backend` (full path from home directory)
+   - **Application URL**: Leave empty or choose subdomain
    - **Application startup file**: `server.js`
    - **Environment variables**: Add your variables:
      - `PORT=5000`
      - `NODE_ENV=production`
      - `FRONTEND_URL=https://rubyet.info`
    - Click **"Create"**
+   
+   **⚠️ Important**: Use `public_html/backend` NOT just `backend` for the Application root path
 
 6. **Start the application**:
    - The app should auto-start
@@ -185,10 +187,12 @@ When you push to master branch, GitHub Actions will automatically:
 
 **Common Issues:**
 
-1. **App won't start**: Check environment variables are set correctly
-2. **502 Bad Gateway**: Backend isn't running, restart the app
-3. **CORS errors**: Verify `FRONTEND_URL` in `.env` matches your domain
-4. **Port conflicts**: Ensure PORT in cPanel matches `.env` file
+1. **"Run NPM Install" shows error**: The error message about "return code None" is usually harmless - the installation likely succeeded. Just ignore it and start the app.
+2. **App won't start**: Check environment variables are set correctly in cPanel
+3. **502 Bad Gateway**: Backend isn't running, restart the app in cPanel
+4. **CORS errors**: Verify `FRONTEND_URL` in `.env` matches your domain
+5. **Port conflicts**: Ensure PORT in cPanel matches `.env` file
+6. **Module not found**: Run `npm install --production` via Terminal instead of using cPanel button
 
 ### Environment-Specific Data
 
