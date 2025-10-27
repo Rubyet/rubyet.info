@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiLock, FiUser, FiEye, FiEyeOff } from 'react-icons/fi';
+import { FiLock, FiUser, FiEye, FiEyeOff, FiSun, FiMoon } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import './AdminLogin.css';
 
-const AdminLogin = () => {
+const AdminLogin = ({ darkMode, toggleTheme }) => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -44,6 +44,14 @@ const AdminLogin = () => {
 
   return (
     <div className="admin-login-page">
+      <button 
+        className="login-theme-toggle" 
+        onClick={toggleTheme}
+        aria-label="Toggle theme"
+      >
+        {darkMode ? <FiSun size={20} /> : <FiMoon size={20} />}
+      </button>
+      
       <motion.div
         className="admin-login-container"
         initial={{ opacity: 0, y: 30 }}

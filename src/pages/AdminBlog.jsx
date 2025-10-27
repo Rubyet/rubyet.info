@@ -10,13 +10,15 @@ import {
   FiSearch,
   FiFilter,
   FiLogOut,
-  FiBarChart2
+  FiBarChart2,
+  FiSun,
+  FiMoon
 } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
 import * as blogService from '../services/blogService';
 import './AdminBlog.css';
 
-const AdminBlog = () => {
+const AdminBlog = ({ darkMode, toggleTheme }) => {
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [filter, setFilter] = useState('all');
@@ -94,9 +96,14 @@ const AdminBlog = () => {
             <h1>Blog Management</h1>
             <p>Welcome back, {session?.username}!</p>
           </div>
-          <button onClick={handleLogout} className="logout-btn">
-            <FiLogOut /> Logout
-          </button>
+          <div className="admin-header-actions">
+            <button onClick={toggleTheme} className="theme-toggle-btn">
+              {darkMode ? <FiSun /> : <FiMoon />}
+            </button>
+            <button onClick={handleLogout} className="logout-btn">
+              <FiLogOut /> Logout
+            </button>
+          </div>
         </div>
       </motion.header>
 

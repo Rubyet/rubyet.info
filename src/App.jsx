@@ -82,6 +82,28 @@ function App() {
     </>
   );
 
+  // Admin Pages Wrapper
+  const AdminBlogPage = () => (
+    <>
+      <AdminBlog darkMode={darkMode} toggleTheme={toggleTheme} />
+      <ScrollToTop />
+    </>
+  );
+
+  const BlogEditorPage = () => (
+    <>
+      <BlogEditor darkMode={darkMode} toggleTheme={toggleTheme} />
+      <ScrollToTop />
+    </>
+  );
+
+  const AdminLoginPage = () => (
+    <>
+      <AdminLogin darkMode={darkMode} toggleTheme={toggleTheme} />
+      <ScrollToTop />
+    </>
+  );
+
   return (
     <HelmetProvider>
       <AuthProvider>
@@ -94,12 +116,12 @@ function App() {
               <Route path="/blog/:slug" element={<BlogDetailPage />} />
               
               {/* Admin Routes */}
-              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/login" element={<AdminLoginPage />} />
               <Route
                 path="/admin/blog"
                 element={
                   <ProtectedRoute>
-                    <AdminBlog />
+                    <AdminBlogPage />
                   </ProtectedRoute>
                 }
               />
@@ -107,7 +129,7 @@ function App() {
                 path="/admin/blog/new"
                 element={
                   <ProtectedRoute>
-                    <BlogEditor />
+                    <BlogEditorPage />
                   </ProtectedRoute>
                 }
               />
@@ -115,7 +137,7 @@ function App() {
                 path="/admin/blog/edit/:id"
                 element={
                   <ProtectedRoute>
-                    <BlogEditor />
+                    <BlogEditorPage />
                   </ProtectedRoute>
                 }
               />

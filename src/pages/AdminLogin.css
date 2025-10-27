@@ -17,6 +17,48 @@
   background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
 }
 
+.login-theme-toggle {
+  position: fixed;
+  top: 30px;
+  right: 40px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 100;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .login-theme-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fbbf24;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.light-mode .login-theme-toggle {
+  background: white;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+}
+
+.login-theme-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.dark-mode .login-theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.light-mode .login-theme-toggle:hover {
+  background: #f8fafc;
+}
+
 .admin-login-container {
   border-radius: 20px;
   padding: 48px;

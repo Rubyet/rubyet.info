@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiSave, FiArrowLeft, FiEye, FiEyeOff, FiX } from 'react-icons/fi';
+import { FiSave, FiArrowLeft, FiEye, FiEyeOff, FiX, FiSun, FiMoon } from 'react-icons/fi';
 import RichTextEditor from '../components/admin/RichTextEditor/RichTextEditor';
 import ImageUpload from '../components/admin/ImageUpload/ImageUpload';
 import * as blogService from '../services/blogService';
 import './BlogEditor.css';
 
-const BlogEditor = () => {
+const BlogEditor = ({ darkMode, toggleTheme }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const isEditMode = !!id;
@@ -144,6 +144,12 @@ const BlogEditor = () => {
             <FiArrowLeft /> Back to Dashboard
           </Link>
           <div className="editor-actions">
+            <button
+              onClick={toggleTheme}
+              className="theme-toggle-btn"
+            >
+              {darkMode ? <FiSun /> : <FiMoon />}
+            </button>
             <button
               onClick={() => setShowPreview(!showPreview)}
               className="preview-btn"
