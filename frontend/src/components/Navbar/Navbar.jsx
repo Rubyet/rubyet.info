@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiMenu, FiX, FiSun, FiMoon } from 'react-icons/fi';
 import './Navbar.css';
@@ -6,6 +7,9 @@ import './Navbar.css';
 const Navbar = ({ darkMode, toggleTheme }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,10 +20,24 @@ const Navbar = ({ darkMode, toggleTheme }) => {
   }, []);
 
   const scrollToSection = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (isHomePage) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        setIsMobileMenuOpen(false);
+      }
+    } else {
+      // Navigate to home page with hash
+      navigate(`/#${id}`);
       setIsMobileMenuOpen(false);
+    }
+  };
+
+  const handleLogoClick = () => {
+    if (isHomePage) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigate('/');
     }
   };
 
@@ -30,9 +48,18 @@ const Navbar = ({ darkMode, toggleTheme }) => {
     { name: 'Education', id: 'education' },
     { name: 'Skills', id: 'skills' },
     { name: 'Projects', id: 'projects' },
-    { name: 'Blog', id: 'blog' },
+    { name: 'Blog', id: 'blog', link: '/blog' },
     { name: 'Contact', id: 'contact' },
   ];
+
+  const handleNavClick = (item) => {
+    if (item.link) {
+      navigate(item.link);
+      setIsMobileMenuOpen(false);
+    } else {
+      scrollToSection(item.id);
+    }
+  };
 
   return (
     <motion.nav
@@ -45,7 +72,7 @@ const Navbar = ({ darkMode, toggleTheme }) => {
         <motion.div
           className="nav-logo"
           whileHover={{ scale: 1.05 }}
-          onClick={() => scrollToSection('home')}
+          onClick={handleLogoClick}
         >
           <span className="logo-text">Rubyet</span>
           <span className="logo-dot">.</span>
@@ -60,7 +87,7 @@ const Navbar = ({ darkMode, toggleTheme }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ scale: 1.1 }}
-              onClick={() => scrollToSection(item.id)}
+              onClick={() => handleNavClick(item)}
             >
               {item.name}
             </motion.div>
