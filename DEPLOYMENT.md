@@ -90,20 +90,38 @@ npm install --production
 
 ### Step 4: Configure Apache Proxy (if needed)
 
-If you want API accessible at `http://rubyet.info/backend/api/`:
+**Option A: Access backend via proxy (Recommended)**
+
+If you want API accessible at `https://rubyet.info/backend/api/`:
 
 1. Go to cPanel → **"File Manager"**
 2. Navigate to `public_html/`
 3. Edit `.htaccess` (or create if doesn't exist)
-4. Add these lines:
+4. Add these lines **at the top** (before any React Router rules):
    ```apache
-   # Proxy API requests to Node.js backend
+   <IfModule mod_rewrite.c>
    RewriteEngine On
+   RewriteBase /
+   
+   # Proxy API requests to Node.js backend (MUST come first)
    RewriteCond %{REQUEST_URI} ^/backend/api/
-   RewriteRule ^backend/api/(.*)$ http://localhost:5000/api/$1 [P,L]
+   RewriteRule ^backend/api/(.*)$ http://127.0.0.1:5000/api/$1 [P,L]
+   
+   # React Router - redirect to index.html (comes after backend rules)
+   RewriteCond %{REQUEST_FILENAME} !-f
+   RewriteCond %{REQUEST_FILENAME} !-d
+   RewriteCond %{REQUEST_URI} !^/backend/
+   RewriteRule ^ index.html [L]
+   </IfModule>
    ```
 
 5. Save the file
+
+**Option B: Access backend directly via port (Alternative)**
+
+Access the API directly: `http://rubyet.info:5000/api/posts`
+
+**Note**: Most cPanel shared hosting blocks direct port access, so Option A (proxy) is recommended.
 
 ### Step 5: Start the Backend
 
@@ -228,20 +246,34 @@ Data files are excluded from git and deployment, keeping environments separate.
 
 **React routes return 404 (e.g., /admin/login):**
 - Missing or incorrect `.htaccess` in root directory
-- **Quick Fix**: Manually create `.htaccess` in your `public_html/` folder via cPanel File Manager
-- Add this content:
+- **Complete .htaccess Solution**: Create/update `.htaccess` in your `public_html/` folder:
   ```apache
   <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
+    
+    # Backend API Proxy (MUST come first)
+    RewriteCond %{REQUEST_URI} ^/backend/api/
+    RewriteRule ^backend/api/(.*)$ http://127.0.0.1:5000/api/$1 [P,L]
+    
+    # React Router (comes after backend rules)
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} !^/backend/
     RewriteRule ^ index.html [L]
   </IfModule>
   ```
-- Or wait for next deployment - the `.htaccess` is now in `frontend/public/` and will be included
-- After creating/updating `.htaccess`, clear browser cache and try again
+- This single `.htaccess` handles **both** React routing AND backend API proxy
+- After creating/updating `.htaccess`, clear browser cache and test:
+  - `https://rubyet.info/admin/login` (React route)
+  - `https://rubyet.info/backend/api/posts` (Backend API)
+
+**Backend API not responding at /backend/api/posts:**
+- Check if backend Node.js app is running in cPanel "Setup Node.js App"
+- Verify `.htaccess` proxy rules are configured (see above)
+- Test direct access: `http://rubyet.info:5000/api/posts` (may not work on shared hosting)
+- Check cPanel Node.js App logs for errors
+- Ensure `mod_proxy` is enabled on your server (contact host if not)
 
 ### View Logs (Terminal)
 
