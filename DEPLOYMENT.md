@@ -228,29 +228,31 @@ Data files are excluded from git and deployment, keeping environments separate.
 - Verify backend is actually running
 - Check Application URL in Node.js App Manager
 
-**React routes return 404 (e.g., /admin/login):**
-- Missing or incorrect `.htaccess` in root directory
-- **Complete .htaccess Solution**: Create/update `.htaccess` in your `public_html/` folder:
+**React routes return 404 (e.g., /admin/login, /blog/:id):**
+- Missing `.htaccess` in production root directory
+- **Immediate Fix**: Manually create `.htaccess` in your `public_html/` folder via cPanel File Manager
+- Add this content:
   ```apache
   <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
     
-    # Backend API Proxy (MUST come first)
-    RewriteCond %{REQUEST_URI} ^/backend/api/
-    RewriteRule ^backend/api/(.*)$ http://127.0.0.1:5000/api/$1 [P,L]
-    
-    # React Router (comes after backend rules)
+    # React Router - Redirect all requests to index.html except for existing files
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} !^/backend/
     RewriteRule ^ index.html [L]
   </IfModule>
   ```
-- This single `.htaccess` handles **both** React routing AND backend API proxy
-- After creating/updating `.htaccess`, clear browser cache and test:
-  - `https://rubyet.info/admin/login` (React route)
-  - `https://rubyet.info/backend/api/posts` (Backend API)
+- **Permanent Fix**: The `.htaccess` is in `frontend/public/` and will be included in next deployment
+- After creating `.htaccess`, clear browser cache and test:
+  - `https://rubyet.info/admin/login`
+  - `https://rubyet.info/blog/some-post-slug`
+
+**Note**: If `.htaccess` already exists but routes still return 404:
+- Check if `mod_rewrite` is enabled (contact hosting if not)
+- Verify the file is in the correct location (`public_html/.htaccess`)
+- Check file permissions (should be 644)
+- Clear browser cache (Ctrl+Shift+R)
 
 **Backend API not responding at admin.rubyet.info (404 Error):**
 1. **Check subdomain exists**: Verify `admin.rubyet.info` is created in cPanel → Subdomains
