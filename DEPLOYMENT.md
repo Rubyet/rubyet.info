@@ -4,9 +4,14 @@
 
 Go to **Settings → Secrets and variables → Actions** and add these secrets:
 
-### FTP Credentials
-- `FTP_USERNAME` - Your FTP username
-- `FTP_PASSWORD` - Your FTP password
+### FTP Credentials (Main Site)
+- `FTP_USERNAME` - Your FTP username for rubyet.info
+- `FTP_PASSWORD` - Your FTP password for rubyet.info
+
+### FTP Credentials (Admin/Backend Subdomain)
+- `FTP_USERNAME_ADMIN` - Your FTP username for admin.rubyet.info
+- `FTP_PASSWORD_ADMIN` - Your FTP password for admin.rubyet.info
+  *(Note: This might be the same as main site credentials, but specified separately for flexibility)*
 
 ### EmailJS Configuration
 - `REACT_APP_EMAILJS_SERVICE_ID` - Your EmailJS service ID
@@ -14,39 +19,54 @@ Go to **Settings → Secrets and variables → Actions** and add these secrets:
 - `REACT_APP_EMAILJS_PUBLIC_KEY` - Your EmailJS public key
 
 ### Backend API URL
-- `REACT_APP_API_URL` - Production API URL (e.g., `https://rubyet.info/backend/api`)
+- `REACT_APP_API_URL` - Production API base URL: `https://admin.rubyet.info/api`
+  *(This is the base URL - service functions will append endpoints like `/posts`, `/tags`, etc.)*
 
 ## Auto-Deployment Process
 
 When you push to the `master` branch:
 
 1. ✅ GitHub Actions builds the frontend React app
-2. ✅ Deploys frontend build to FTP root directory (includes `.htaccess` for routing)
-3. ✅ Deploys backend code to `/backend/` folder on FTP
-4. ✅ Website updates automatically
+2. ✅ Deploys frontend build to **rubyet.info** (includes `.htaccess` for routing)
+3. ✅ Deploys backend code to **admin.rubyet.info** subdomain
+4. ✅ Both sites update automatically
 
-**Important**: The `.htaccess` file in `frontend/public/` is automatically included in the build and deployed. This file ensures React Router works correctly on the server (e.g., `/admin/login` routes work).
+**Architecture:**
+- **Frontend**: `https://rubyet.info` - React portfolio/blog
+- **Backend API**: `https://admin.rubyet.info/api` - Node.js/Express API
+  - Base URL: `https://admin.rubyet.info`
+  - API endpoints: `/api/posts`, `/api/tags`, etc.
+- **Separate subdomains** = No proxy needed, cleaner architecture
 
 ## Post-Deployment Steps (cPanel)
 
 After the first deployment:
 
-### Step 1: Setup Environment Variables
+### Step 1: Setup Backend Subdomain (admin.rubyet.info)
 
 1. Login to **cPanel**
-2. Open **Terminal** (or use SSH if available)
-3. Navigate to backend folder:
+2. Go to **"Subdomains"**
+3. Create subdomain:
+   - **Subdomain**: `admin`
+   - **Domain**: `rubyet.info`
+   - **Document Root**: Auto-generated (e.g., `public_html/admin`)
+4. Note the document root path - backend files will be deployed here
+
+### Step 2: Setup Environment Variables
+
+1. Open **cPanel Terminal** (or use SSH)
+2. Navigate to admin subdomain folder:
    ```bash
-   cd public_html/backend
+   cd public_html/admin  # Or whatever path cPanel created
    ```
 
-4. Create environment file:
+3. Create environment file:
    ```bash
    cp .env.example .env
    nano .env
    ```
 
-5. Update `.env` with production values:
+4. Update `.env` with production values:
    ```
    PORT=5000
    NODE_ENV=production
@@ -54,24 +74,24 @@ After the first deployment:
    ```
    Press `Ctrl+X`, then `Y`, then `Enter` to save
 
-### Step 2: Install Dependencies
+### Step 3: Install Dependencies
 
 In the same terminal:
 ```bash
 npm install --production
 ```
 
-**Note**: If you prefer to use cPanel's "Run NPM Install" button later (Step 3), you can skip this step. However, installing via terminal is more reliable and shows clear error messages if something fails.
+**Note**: If you prefer to use cPanel's "Run NPM Install" button later (Step 4), you can skip this step. However, installing via terminal is more reliable and shows clear error messages if something fails.
 
-### Step 3: Setup Node.js Application
+### Step 4: Setup Node.js Application
 
 1. Go to cPanel → **"Setup Node.js App"**
 2. Click **"Create Application"**
 3. Configure:
    - **Node.js version**: 18.x or higher (latest available)
    - **Application mode**: Production
-   - **Application root**: `public_html/backend` (NOT just `backend`)
-   - **Application URL**: Leave empty or choose a subdomain
+   - **Application root**: `public_html/admin` (path to admin subdomain)
+   - **Application URL**: `admin.rubyet.info` (your subdomain)
    - **Application startup file**: `server.js`
    - **Passenger log file**: Leave default
 
@@ -83,51 +103,15 @@ npm install --production
 5. Click **"Create"**
 
 **Important**: 
-- Use the **full path** `public_html/backend` for Application root
-- If you see "No such application" error, the path is wrong
-- The path should be relative to your home directory (`/home/rubygoys/`)
-- So `public_html/backend` becomes `/home/rubygoys/public_html/backend`
+- The backend will be accessible at `https://admin.rubyet.info/api/posts`
+- No Apache proxy needed since it's a separate subdomain
+- cPanel will handle the routing automatically
 
-### Step 4: Configure Apache Proxy (if needed)
+### Step 5: Test the Backend
 
-**Option A: Access backend via proxy (Recommended)**
-
-If you want API accessible at `https://rubyet.info/backend/api/`:
-
-1. Go to cPanel → **"File Manager"**
-2. Navigate to `public_html/`
-3. Edit `.htaccess` (or create if doesn't exist)
-4. Add these lines **at the top** (before any React Router rules):
-   ```apache
-   <IfModule mod_rewrite.c>
-   RewriteEngine On
-   RewriteBase /
-   
-   # Proxy API requests to Node.js backend (MUST come first)
-   RewriteCond %{REQUEST_URI} ^/backend/api/
-   RewriteRule ^backend/api/(.*)$ http://127.0.0.1:5000/api/$1 [P,L]
-   
-   # React Router - redirect to index.html (comes after backend rules)
-   RewriteCond %{REQUEST_FILENAME} !-f
-   RewriteCond %{REQUEST_FILENAME} !-d
-   RewriteCond %{REQUEST_URI} !^/backend/
-   RewriteRule ^ index.html [L]
-   </IfModule>
-   ```
-
-5. Save the file
-
-**Option B: Access backend directly via port (Alternative)**
-
-Access the API directly: `http://rubyet.info:5000/api/posts`
-
-**Note**: Most cPanel shared hosting blocks direct port access, so Option A (proxy) is recommended.
-
-### Step 5: Start the Backend
-
-1. In cPanel **"Setup Node.js App"**, find your application
-2. Click **"Start App"** (if not already started)
-3. Verify it's running by clicking **"Open"** or visiting `https://rubyet.info/backend/api/posts`
+1. In cPanel **"Setup Node.js App"**, click **"Start App"**
+2. Visit `https://admin.rubyet.info/api/posts` in your browser
+3. You should see JSON response with blog posts
 
 
 ## Updating Production
@@ -143,11 +127,11 @@ When GitHub Actions completes deployment:
 1. Login to **cPanel Terminal**
 2. Run:
    ```bash
-   cd public_html/backend
+   cd public_html/admin  # Backend subdomain path
    npm install --production
    ```
 3. Go to **"Setup Node.js App"**
-4. Find your application and click **"Restart"**
+4. Find your application (admin.rubyet.info) and click **"Restart"**
 
 **Option 2: Using cPanel UI**
 1. Login to **cPanel**
@@ -268,12 +252,21 @@ Data files are excluded from git and deployment, keeping environments separate.
   - `https://rubyet.info/admin/login` (React route)
   - `https://rubyet.info/backend/api/posts` (Backend API)
 
-**Backend API not responding at /backend/api/posts:**
-- Check if backend Node.js app is running in cPanel "Setup Node.js App"
-- Verify `.htaccess` proxy rules are configured (see above)
-- Test direct access: `http://rubyet.info:5000/api/posts` (may not work on shared hosting)
-- Check cPanel Node.js App logs for errors
-- Ensure `mod_proxy` is enabled on your server (contact host if not)
+**Backend API not responding at admin.rubyet.info (404 Error):**
+1. **Check subdomain exists**: Verify `admin.rubyet.info` is created in cPanel → Subdomains
+2. **Check backend is running**:
+   - cPanel → "Setup Node.js App" → Verify status is "Running"
+   - Application URL should show `admin.rubyet.info`
+3. **Test the API**: Visit `https://admin.rubyet.info/api/posts`
+4. **Check DNS**: admin subdomain might take a few minutes to propagate
+5. **Verify deployment**: Files should be in the subdomain's document root (e.g., `public_html/admin`)
+
+**Frontend can't connect to backend:**
+1. **Check REACT_APP_API_URL**: Should be `https://admin.rubyet.info/api` (includes `/api` path)
+2. **CORS issue**: Verify backend `.env` has `FRONTEND_URL=https://rubyet.info`
+3. **Mixed content**: If frontend is HTTPS, backend must also be HTTPS
+4. **GitHub Secret**: Ensure `REACT_APP_API_URL` is set to `https://admin.rubyet.info/api`
+5. **Test manually**: Visit `https://admin.rubyet.info/api/posts` - should return JSON
 
 ### View Logs (Terminal)
 

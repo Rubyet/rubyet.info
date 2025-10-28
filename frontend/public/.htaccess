@@ -2,14 +2,9 @@
   RewriteEngine On
   RewriteBase /
   
-  # Backend API Proxy - Must come BEFORE React Router rules
-  RewriteCond %{REQUEST_URI} ^/backend/api/
-  RewriteRule ^backend/api/(.*)$ http://127.0.0.1:5000/api/$1 [P,L]
-  
   # React Router - Redirect all requests to index.html except for existing files
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteCond %{REQUEST_URI} !^/backend/
   RewriteRule ^ index.html [L]
 </IfModule>
 
