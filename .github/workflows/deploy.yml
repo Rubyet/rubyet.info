@@ -13,13 +13,45 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Fetch last 2 commits to detect changes
+        
+      - name: Check for changes
+        id: changes
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "frontend=true" >> $GITHUB_OUTPUT
+            echo "backend=true" >> $GITHUB_OUTPUT
+            echo "Manual trigger - deploying both frontend and backend"
+          else
+            git diff --name-only HEAD^ HEAD > changed_files.txt
+            cat changed_files.txt
+            
+            if grep -q "^frontend/" changed_files.txt; then
+              echo "frontend=true" >> $GITHUB_OUTPUT
+              echo "Frontend changes detected"
+            else
+              echo "frontend=false" >> $GITHUB_OUTPUT
+              echo "No frontend changes"
+            fi
+            
+            if grep -q "^backend/" changed_files.txt; then
+              echo "backend=true" >> $GITHUB_OUTPUT
+              echo "Backend changes detected"
+            else
+              echo "backend=false" >> $GITHUB_OUTPUT
+              echo "No backend changes"
+            fi
+          fi
         
       - name: Setup Node.js
+        if: steps.changes.outputs.frontend == 'true' || steps.changes.outputs.backend == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           
       - name: Cache dependencies
+        if: steps.changes.outputs.frontend == 'true' || steps.changes.outputs.backend == 'true'
         uses: actions/cache@v3
         with:
           path: ~/.npm
@@ -28,12 +60,15 @@ jobs:
             ${{ runner.os }}-node-
           
       - name: Install Frontend dependencies
+        if: steps.changes.outputs.frontend == 'true'
         run: cd frontend && npm install --legacy-peer-deps
         
       - name: Install Backend dependencies
+        if: steps.changes.outputs.backend == 'true'
         run: cd backend && npm install
         
       - name: Build Frontend
+        if: steps.changes.outputs.frontend == 'true'
         run: cd frontend && npm run build
         env:
           CI: false
@@ -44,6 +79,7 @@ jobs:
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
           
       - name: Deploy Frontend to FTP
+        if: steps.changes.outputs.frontend == 'true'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: rubyet.info
@@ -61,6 +97,7 @@ jobs:
             **/README.md
             
       - name: Deploy Backend to admin.rubyet.info
+        if: steps.changes.outputs.backend == 'true'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: admin.rubyet.info
@@ -83,15 +120,24 @@ jobs:
         if: success()
         run: |
           echo "✅ Deployment successful!"
-          echo "🚀 Frontend: https://rubyet.info"
-          echo "🔧 Backend API: https://admin.rubyet.info"
-          echo "📊 Frontend build size: $(du -sh frontend/build 2>/dev/null | cut -f1 || echo 'N/A')"
-          echo "⚠️  Post-deployment steps:"
-          echo "   1. SSH to admin.rubyet.info"
-          echo "   2. Run 'npm install --production'"
-          echo "   3. Setup .env file with production values"
-          echo "   4. Configure Node.js App in cPanel for admin.rubyet.info"
-          echo "   5. Start the backend server"
+          if [ "${{ steps.changes.outputs.frontend }}" == "true" ]; then
+            echo "� Frontend deployed: https://rubyet.info"
+            echo "📊 Frontend build size: $(du -sh frontend/build 2>/dev/null | cut -f1 || echo 'N/A')"
+          else
+            echo "⏭️  Frontend: No changes, skipped deployment"
+          fi
+          
+          if [ "${{ steps.changes.outputs.backend }}" == "true" ]; then
+            echo "🔧 Backend deployed: https://admin.rubyet.info"
+            echo "⚠️  Post-deployment steps:"
+            echo "   1. SSH to admin.rubyet.info"
+            echo "   2. Run 'npm install --production'"
+            echo "   3. Setup .env file with production values"
+            echo "   4. Configure Node.js App in cPanel for admin.rubyet.info"
+            echo "   5. Start the backend server"
+          else
+            echo "⏭️  Backend: No changes, skipped deployment"
+          fi
           
       - name: Deployment Failed Notification
         if: failure()
