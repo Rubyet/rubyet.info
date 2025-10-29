@@ -1,0 +1,6 @@
+/* Reuse styles from AdminBlog.css */
+@import '../../pages/AdminBlog.css';
+
+.admin-blog-content {
+  width: 100%;
+}

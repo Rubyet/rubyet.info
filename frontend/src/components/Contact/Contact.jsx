@@ -33,7 +33,22 @@ const Contact = () => {
     setStatus('Sending your message...');
     
     try {
-      // EmailJS configuration from environment variables
+      // First, save to backend database
+      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+      
+      try {
+        await fetch(`${API_URL}/contacts`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+      } catch (dbError) {
+        console.warn('Failed to save to database, but continuing with email:', dbError);
+      }
+
+      // Then send email via EmailJS
       const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID;
       const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
       const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;

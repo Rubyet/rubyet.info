@@ -22,7 +22,7 @@ import ScrollToTop from './components/ScrollToTop/ScrollToTop.jsx';
 // Page Components
 import BlogDetail from './pages/BlogDetail';
 import AdminLogin from './pages/AdminLogin';
-import AdminBlog from './pages/AdminBlog';
+import AdminDashboard from './pages/AdminDashboard';
 import BlogEditor from './pages/BlogEditor';
 
 function App() {
@@ -83,9 +83,9 @@ function App() {
   );
 
   // Admin Pages Wrapper
-  const AdminBlogPage = () => (
+  const AdminDashboardPage = () => (
     <>
-      <AdminBlog darkMode={darkMode} toggleTheme={toggleTheme} />
+      <AdminDashboard darkMode={darkMode} toggleTheme={toggleTheme} />
       <ScrollToTop />
     </>
   );
@@ -118,10 +118,18 @@ function App() {
               {/* Admin Routes */}
               <Route path="/admin/login" element={<AdminLoginPage />} />
               <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboardPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/admin/blog"
                 element={
                   <ProtectedRoute>
-                    <AdminBlogPage />
+                    <AdminDashboardPage />
                   </ProtectedRoute>
                 }
               />
