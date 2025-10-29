@@ -131,10 +131,10 @@ const BlogDetail = () => {
             "description": post.excerpt,
             "image": post.coverImage,
             "datePublished": post.publishedDate,
-            "dateModified": post.updatedAt,
+            "dateModified": post.updatedDate,
             "author": {
               "@type": "Person",
-              "name": post.author.name
+              "name": post.author
             }
           })}
         </script>

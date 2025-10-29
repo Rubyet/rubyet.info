@@ -80,7 +80,10 @@ const AdminBlog = ({ darkMode, toggleTheme }) => {
   const handleToggleStatus = async (id, currentStatus) => {
     const newStatus = currentStatus === 'published' ? 'draft' : 'published';
     try {
-      await blogService.updatePost(id, { status: newStatus });
+      await blogService.updatePost(id, { 
+        status: newStatus,
+        updatedDate: new Date().toISOString()
+      });
       loadData();
     } catch (error) {
       console.error('Error updating post status:', error);
@@ -94,7 +97,10 @@ const AdminBlog = ({ darkMode, toggleTheme }) => {
   };
 
   const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('en-US', {
+    if (!date) return 'No date';
+    const dateObj = new Date(date);
+    if (isNaN(dateObj.getTime())) return 'Invalid date';
+    return dateObj.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
@@ -280,7 +286,7 @@ const AdminBlog = ({ darkMode, toggleTheme }) => {
                         {post.status === 'published' ? 'Published' : 'Updated'}
                       </span>
                       <span className="date-value">
-                        {formatDate(post.status === 'published' ? post.publishedDate : post.updatedAt)}
+                        {formatDate(post.status === 'published' ? post.publishedDate : (post.updatedDate || post.publishedDate))}
                       </span>
                     </div>
                   </td>
