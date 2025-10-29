@@ -656,3 +656,113 @@
     font-size: 20px;
   }
 }
+
+/* ==================== AI ASSISTANCE BUTTONS ==================== */
+
+.ai-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+}
+
+.ai-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+}
+
+.ai-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.ai-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+  box-shadow: none;
+}
+
+.ai-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.ai-btn-inline {
+  margin-left: 12px;
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dark-mode .ai-btn {
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.5);
+}
+
+.dark-mode .ai-btn:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.6);
+}
+
+.seo-section h3 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* AI Loading Animation */
+@keyframes aiPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.ai-btn:disabled svg {
+  animation: aiPulse 1.5s ease-in-out infinite;
+}
+
+/* Responsive AI Buttons */
+@media (max-width: 768px) {
+  .ai-btn-inline {
+    margin-left: 0;
+    margin-top: 8px;
+  }
+
+  .form-label {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .seo-section h3 {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .ai-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+

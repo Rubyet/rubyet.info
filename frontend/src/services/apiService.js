@@ -159,6 +159,48 @@ export function generateUniqueSlug(title, existingSlugs = []) {
   return uniqueSlug;
 }
 
+// ==================== AI ASSISTANCE FUNCTIONS ====================
+
+// Improve title with AI
+export async function improveTitle(title) {
+  return await apiRequest('/ai/improve-title', {
+    method: 'POST',
+    body: JSON.stringify({ title }),
+  });
+}
+
+// Generate excerpt with AI
+export async function generateExcerpt(title, content) {
+  return await apiRequest('/ai/generate-excerpt', {
+    method: 'POST',
+    body: JSON.stringify({ title, content }),
+  });
+}
+
+// Get AI help with content
+export async function helpWithContent(topic, currentContent = '') {
+  return await apiRequest('/ai/help-content', {
+    method: 'POST',
+    body: JSON.stringify({ topic, currentContent }),
+  });
+}
+
+// Suggest tags with AI
+export async function suggestTags(title, content) {
+  return await apiRequest('/ai/suggest-tags', {
+    method: 'POST',
+    body: JSON.stringify({ title, content }),
+  });
+}
+
+// Generate SEO metadata with AI
+export async function generateSEO(title, content, excerpt) {
+  return await apiRequest('/ai/generate-seo', {
+    method: 'POST',
+    body: JSON.stringify({ title, content, excerpt }),
+  });
+}
+
 const apiService = {
   getAllPosts,
   getPostById,
@@ -176,6 +218,12 @@ const apiService = {
   importPosts,
   calculateReadingTime,
   generateUniqueSlug,
+  // AI Functions
+  improveTitle,
+  generateExcerpt,
+  helpWithContent,
+  suggestTags,
+  generateSEO,
 };
 
 export default apiService;

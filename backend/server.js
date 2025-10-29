@@ -10,6 +10,7 @@ const { errorHandler, notFound } = require('./middleware/errorHandler');
 const postRoutes = require('./routes/postRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const apiRoutes = require('./routes/apiRoutes');
+const aiRoutes = require('./routes/aiRoutes');
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.get('/api/health', (req, res) => {
 // API Routes
 app.use('/api/posts', postRoutes);
 app.use('/api/contacts', contactRoutes);
+app.use('/api/ai', aiRoutes);
 app.use('/api', apiRoutes);
 
 // ==================== ERROR HANDLING ====================
@@ -64,6 +66,12 @@ async function startServer() {
       console.log('  • POST   /api/contacts');
       console.log('  • GET    /api/statistics');
       console.log('  • GET    /api/tags');
+      console.log('\n🤖 AI Endpoints:');
+      console.log('  • POST   /api/ai/improve-title');
+      console.log('  • POST   /api/ai/generate-excerpt');
+      console.log('  • POST   /api/ai/help-content');
+      console.log('  • POST   /api/ai/suggest-tags');
+      console.log('  • POST   /api/ai/generate-seo');
       console.log('='.repeat(50) + '\n');
     });
   } catch (error) {

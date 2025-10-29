@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiSave, FiArrowLeft, FiEye, FiEyeOff, FiX, FiSun, FiMoon } from 'react-icons/fi';
+import { FiSave, FiArrowLeft, FiEye, FiEyeOff, FiX, FiSun, FiMoon, FiZap, FiRefreshCw, FiEdit3, FiTag } from 'react-icons/fi';
 import RichTextEditor from '../components/admin/RichTextEditor/RichTextEditor';
 import ImageUpload from '../components/admin/ImageUpload/ImageUpload';
 import * as blogService from '../services/apiService';
@@ -27,6 +27,13 @@ const BlogEditor = ({ darkMode, toggleTheme }) => {
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [aiLoading, setAiLoading] = useState({
+    title: false,
+    excerpt: false,
+    content: false,
+    tags: false,
+    seo: false
+  });
 
   useEffect(() => {
     const loadPost = async () => {
@@ -84,6 +91,110 @@ const BlogEditor = ({ darkMode, toggleTheme }) => {
       ...prev,
       tags: prev.tags.filter(tag => tag !== tagToRemove)
     }));
+  };
+
+  // ==================== AI ASSISTANCE FUNCTIONS ====================
+
+  const handleImproveTitle = async () => {
+    if (!formData.title.trim()) {
+      alert('Please enter a title first');
+      return;
+    }
+
+    setAiLoading(prev => ({ ...prev, title: true }));
+    try {
+      const response = await blogService.improveTitle(formData.title);
+      setFormData(prev => ({ ...prev, title: response.improved }));
+    } catch (error) {
+      console.error('AI Error:', error);
+      alert(error.message || 'Failed to improve title. Please try again.');
+    } finally {
+      setAiLoading(prev => ({ ...prev, title: false }));
+    }
+  };
+
+  const handleGenerateExcerpt = async () => {
+    if (!formData.title.trim() || !formData.content.trim()) {
+      alert('Please enter title and content first');
+      return;
+    }
+
+    setAiLoading(prev => ({ ...prev, excerpt: true }));
+    try {
+      const response = await blogService.generateExcerpt(formData.title, formData.content);
+      setFormData(prev => ({ ...prev, excerpt: response.excerpt }));
+    } catch (error) {
+      console.error('AI Error:', error);
+      alert(error.message || 'Failed to generate excerpt. Please try again.');
+    } finally {
+      setAiLoading(prev => ({ ...prev, excerpt: false }));
+    }
+  };
+
+  const handleContentHelp = async () => {
+    const topic = formData.title.trim() || prompt('Enter a topic for content generation:');
+    if (!topic) return;
+
+    setAiLoading(prev => ({ ...prev, content: true }));
+    try {
+      const response = await blogService.helpWithContent(topic, formData.content);
+      // Append AI content to existing content
+      const newContent = formData.content.trim() 
+        ? `${formData.content}\n\n${response.content}`
+        : response.content;
+      setFormData(prev => ({ ...prev, content: newContent }));
+    } catch (error) {
+      console.error('AI Error:', error);
+      alert(error.message || 'Failed to generate content. Please try again.');
+    } finally {
+      setAiLoading(prev => ({ ...prev, content: false }));
+    }
+  };
+
+  const handleSuggestTags = async () => {
+    if (!formData.title.trim() || !formData.content.trim()) {
+      alert('Please enter title and content first');
+      return;
+    }
+
+    setAiLoading(prev => ({ ...prev, tags: true }));
+    try {
+      const response = await blogService.suggestTags(formData.title, formData.content);
+      // Add suggested tags that aren't already in the list
+      const newTags = response.tags.filter(tag => !formData.tags.includes(tag));
+      setFormData(prev => ({ ...prev, tags: [...prev.tags, ...newTags] }));
+    } catch (error) {
+      console.error('AI Error:', error);
+      alert(error.message || 'Failed to suggest tags. Please try again.');
+    } finally {
+      setAiLoading(prev => ({ ...prev, tags: false }));
+    }
+  };
+
+  const handleGenerateSEO = async () => {
+    if (!formData.title.trim() || !formData.content.trim()) {
+      alert('Please enter title and content first');
+      return;
+    }
+
+    setAiLoading(prev => ({ ...prev, seo: true }));
+    try {
+      const response = await blogService.generateSEO(
+        formData.title, 
+        formData.content, 
+        formData.excerpt
+      );
+      setFormData(prev => ({
+        ...prev,
+        seoTitle: response.seoTitle,
+        seoDescription: response.seoDescription
+      }));
+    } catch (error) {
+      console.error('AI Error:', error);
+      alert(error.message || 'Failed to generate SEO. Please try again.');
+    } finally {
+      setAiLoading(prev => ({ ...prev, seo: false }));
+    }
   };
 
   const validateForm = () => {
@@ -228,6 +339,15 @@ const BlogEditor = ({ darkMode, toggleTheme }) => {
             <div className="form-section">
               <label className="form-label">
                 Title <span className="required">*</span>
+                <button
+                  type="button"
+                  onClick={handleImproveTitle}
+                  disabled={aiLoading.title || !formData.title.trim()}
+                  className="ai-btn ai-btn-inline"
+                  title="Improve with AI"
+                >
+                  <FiZap /> {aiLoading.title ? 'Improving...' : 'AI Improve'}
+                </button>
               </label>
               <input
                 type="text"
@@ -243,6 +363,15 @@ const BlogEditor = ({ darkMode, toggleTheme }) => {
             <div className="form-section">
               <label className="form-label">
                 Excerpt <span className="required">*</span>
+                <button
+                  type="button"
+                  onClick={handleGenerateExcerpt}
+                  disabled={aiLoading.excerpt || !formData.title.trim() || !formData.content.trim()}
+                  className="ai-btn ai-btn-inline"
+                  title="Generate with AI"
+                >
+                  <FiZap /> {aiLoading.excerpt ? 'Generating...' : 'AI Generate'}
+                </button>
               </label>
               <textarea
                 className={`excerpt-input ${errors.excerpt ? 'error' : ''}`}
@@ -271,6 +400,15 @@ const BlogEditor = ({ darkMode, toggleTheme }) => {
             <div className="form-section">
               <label className="form-label">
                 Content <span className="required">*</span>
+                <button
+                  type="button"
+                  onClick={handleContentHelp}
+                  disabled={aiLoading.content}
+                  className="ai-btn ai-btn-inline"
+                  title="Get AI help with content"
+                >
+                  <FiEdit3 /> {aiLoading.content ? 'Generating...' : 'AI Help'}
+                </button>
               </label>
               <div className={errors.content ? 'error-border' : ''}>
                 <RichTextEditor
@@ -287,7 +425,18 @@ const BlogEditor = ({ darkMode, toggleTheme }) => {
 
             {/* Tags */}
             <div className="form-section">
-              <label className="form-label">Tags</label>
+              <label className="form-label">
+                Tags
+                <button
+                  type="button"
+                  onClick={handleSuggestTags}
+                  disabled={aiLoading.tags || !formData.title.trim() || !formData.content.trim()}
+                  className="ai-btn ai-btn-inline"
+                  title="Suggest tags with AI"
+                >
+                  <FiTag /> {aiLoading.tags ? 'Suggesting...' : 'AI Suggest'}
+                </button>
+              </label>
               <div className="tags-container">
                 {formData.tags.map(tag => (
                   <span key={tag} className="tag-chip">
@@ -315,7 +464,18 @@ const BlogEditor = ({ darkMode, toggleTheme }) => {
 
             {/* SEO Section */}
             <div className="seo-section">
-              <h3>SEO Settings</h3>
+              <h3>
+                SEO Settings
+                <button
+                  type="button"
+                  onClick={handleGenerateSEO}
+                  disabled={aiLoading.seo || !formData.title.trim() || !formData.content.trim()}
+                  className="ai-btn"
+                  title="Generate SEO with AI"
+                >
+                  <FiRefreshCw /> {aiLoading.seo ? 'Generating...' : 'AI Generate SEO'}
+                </button>
+              </h3>
               <div className="form-section">
                 <label className="form-label">SEO Title</label>
                 <input
