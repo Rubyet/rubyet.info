@@ -129,16 +129,22 @@ const AdminLogin = ({ darkMode, toggleTheme }) => {
           >
             {loading ? 'Logging in...' : 'Login'}
           </motion.button>
-        </form>
 
-        <div className="admin-login-footer">
-          <p className="default-creds">
-            Default credentials: <code>admin / Admin@2024!</code>
-          </p>
-          <p className="security-note">
-            ⚠️ Change default password immediately after first login
-          </p>
-        </div>
+          <div className="forgot-password-section">
+            <a 
+              href="#"
+              className="forgot-password-link"
+              onClick={(e) => {
+                e.preventDefault();
+                const resetLink = `/admin/reset-password?token=${btoa(`reset-${Date.now()}`)}`;
+                window.open(resetLink, '_blank');
+              }}
+              title="Emergency password reset"
+            >
+              Forgot password?
+            </a>
+          </div>
+        </form>
       </motion.div>
 
       {/* Background decoration */}

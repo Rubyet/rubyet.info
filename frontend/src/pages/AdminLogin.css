@@ -262,6 +262,41 @@
   cursor: not-allowed;
 }
 
+.forgot-password-section {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.forgot-password-link {
+  font-size: 13px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.dark-mode .forgot-password-link {
+  color: #94a3b8;
+}
+
+.light-mode .forgot-password-link {
+  color: #64748b;
+}
+
+.forgot-password-link:hover {
+  color: #6366f1;
+  text-decoration: underline;
+}
+
+.dark-mode .forgot-password-link:hover {
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.light-mode .forgot-password-link:hover {
+  background: rgba(99, 102, 241, 0.05);
+}
+
 .admin-login-footer {
   text-align: center;
   padding-top: 24px;

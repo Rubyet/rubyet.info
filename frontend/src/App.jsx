@@ -24,6 +24,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminLogin from './pages/AdminLogin';
 import BlogDetail from './pages/BlogDetail';
 import BlogEditor from './pages/BlogEditor';
+import PasswordReset from './pages/PasswordReset';
 
 function App() {
   const [darkMode, setDarkMode] = useState(true);
@@ -104,6 +105,13 @@ function App() {
     </>
   );
 
+  const PasswordResetPage = () => (
+    <>
+      <PasswordReset darkMode={darkMode} toggleTheme={toggleTheme} />
+      <ScrollToTop />
+    </>
+  );
+
   return (
     <HelmetProvider>
       <AuthProvider>
@@ -117,6 +125,7 @@ function App() {
               
               {/* Admin Routes */}
               <Route path="/admin/login" element={<AdminLoginPage />} />
+              <Route path="/admin/reset-password" element={<PasswordResetPage />} />
               <Route
                 path="/admin"
                 element={

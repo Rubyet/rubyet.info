@@ -74,6 +74,7 @@ async function startServer() {
       console.log('  • GET    /api/tags');
       console.log('\n🔐 Auth Endpoints:');
       console.log('  • POST   /api/auth/login');
+      console.log('  • POST   /api/auth/reset-password');
       console.log('  • GET    /api/auth/verify');
       console.log('  • GET    /api/auth/me');
       console.log('  • POST   /api/auth/change-password');

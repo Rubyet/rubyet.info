@@ -17,14 +17,14 @@ const initializeAdmin = async () => {
       // Create default admin user
       console.log('📝 Creating default admin user...');
       const defaultAdmin = await createAdminCredentials(
-        'admin',
+        'ryt_admin',
         'Admin@2024!', // Strong default password - CHANGE THIS!
         'admin@rubyet.info'
       );
       
       await fs.writeFile(ADMIN_FILE, JSON.stringify(defaultAdmin, null, 2));
       console.log('✅ Default admin user created');
-      console.log('⚠️  Username: admin');
+      console.log('⚠️  Username: ryt_admin');
       console.log('⚠️  Password: Admin@2024! (CHANGE THIS IMMEDIATELY!)');
     }
   } catch (error) {
@@ -191,10 +191,113 @@ const getCurrentUser = async (req, res) => {
   }
 };
 
+/**
+ * Reset password with token (for forgot password)
+ * Requires username verification for security
+ */
+const resetPassword = async (req, res) => {
+  try {
+    const { token, username, newPassword } = req.body;
+
+    // Validate input
+    if (!token || !username || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Token, username, and new password are required'
+      });
+    }
+
+    // Read admin credentials
+    const adminData = JSON.parse(await fs.readFile(ADMIN_FILE, 'utf8'));
+
+    // Verify username FIRST (security check)
+    if (adminData.username !== username) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid username. Password reset denied.'
+      });
+    }
+
+    // Validate new password strength
+    if (newPassword.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message: 'New password must be at least 8 characters long'
+      });
+    }
+
+    if (!/[A-Z]/.test(newPassword)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must contain at least one uppercase letter'
+      });
+    }
+
+    if (!/[a-z]/.test(newPassword)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must contain at least one lowercase letter'
+      });
+    }
+
+    if (!/[0-9]/.test(newPassword)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must contain at least one number'
+      });
+    }
+
+    if (!/[!@#$%^&*]/.test(newPassword)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must contain at least one special character (!@#$%^&*)'
+      });
+    }
+
+    // Simple token validation
+    const decodedToken = Buffer.from(token, 'base64').toString('utf-8');
+    if (!decodedToken.startsWith('reset-')) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid or expired reset token'
+      });
+    }
+
+    // Hash new password
+    const bcrypt = require('bcryptjs');
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    // Update password
+    adminData.password = hashedPassword;
+    adminData.passwordChangedAt = new Date().toISOString();
+    adminData.resetAt = new Date().toISOString();
+    adminData.resetBy = username;
+
+    // Save to file
+    await fs.writeFile(ADMIN_FILE, JSON.stringify(adminData, null, 2));
+
+    // Log the password reset
+    console.log(`🔐 Password reset successful for user: ${username} at ${new Date().toISOString()}`);
+
+    res.json({
+      success: true,
+      message: 'Password reset successfully'
+    });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'An error occurred while resetting password'
+    });
+  }
+};
+
 module.exports = {
   initializeAdmin,
   login,
   verifyTokenController,
   changePassword,
-  getCurrentUser
+  getCurrentUser,
+  resetPassword
 };
