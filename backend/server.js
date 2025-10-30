@@ -19,7 +19,7 @@ app.use(cors());
 app.use(express.json({ limit: REQUEST_SIZE_LIMIT }));
 app.use(express.urlencoded({ extended: true, limit: REQUEST_SIZE_LIMIT }));
 
-// ==================== ROUTES ====================
+// ==================== ROUTES =====================
 
 // Health check
 app.get('/api/health', (req, res) => {

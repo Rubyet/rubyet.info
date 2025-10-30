@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { 
-  FiClock, 
-  FiCalendar, 
-  FiTag, 
+import {
   FiArrowLeft,
-  FiShare2,
+  FiCalendar,
+  FiClock,
+  FiFacebook,
   FiLinkedin,
-  FiTwitter,
-  FiFacebook
+  FiShare2,
+  FiTag,
+  FiTwitter
 } from 'react-icons/fi';
+import { Link, useParams } from 'react-router-dom';
 import * as blogService from '../services/apiService';
 import './BlogDetail.css';
 
@@ -108,14 +108,14 @@ const BlogDetail = () => {
       <Helmet>
         <title>{post.seoTitle || post.title} | Rubyet Hossain</title>
         <meta name="description" content={post.seoDescription || post.excerpt} />
-        
+
         {/* Open Graph */}
         <meta property="og:title" content={post.seoTitle || post.title} />
         <meta property="og:description" content={post.seoDescription || post.excerpt} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={shareUrl} />
         {post.coverImage && <meta property="og:image" content={post.coverImage} />}
-        
+
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={post.seoTitle || post.title} />
@@ -176,7 +176,7 @@ const BlogDetail = () => {
 
             <div className="article-header-content">
               <h1>{post.title}</h1>
-              
+
               <div className="article-meta">
                 <div className="meta-item">
                   <FiCalendar />
@@ -205,7 +205,7 @@ const BlogDetail = () => {
           </header>
 
           {/* Article Content */}
-          <div 
+          <div
             className="article-content"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
