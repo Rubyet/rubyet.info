@@ -17,7 +17,22 @@ const { initializeAdmin } = require('./controllers/authController');
 const app = express();
 
 // ==================== MIDDLEWARE ==================
-app.use(cors());
+// Configure CORS for production
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'https://rubyet.info',
+    'https://www.rubyet.info',
+    'https://admin.rubyet.info'
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
 app.use(express.json({ limit: REQUEST_SIZE_LIMIT }));
 app.use(express.urlencoded({ extended: true, limit: REQUEST_SIZE_LIMIT }));
 
