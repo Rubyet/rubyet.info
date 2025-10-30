@@ -1,4 +1,4 @@
-name: Build and Deploy to FTP
+name: Build and Deploy via FTP
 
 on:
   push:
@@ -78,47 +78,27 @@ jobs:
           REACT_APP_EMAILJS_PUBLIC_KEY: ${{ secrets.REACT_APP_EMAILJS_PUBLIC_KEY }}
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
           
-      - name: Deploy Frontend to FTP
+      - name: Deploy Frontend via FTP
         if: steps.changes.outputs.frontend == 'true'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: sebastianpopp/ftp-action@releases/v2
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
+          host: ftp.rubyet.info
+          user: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          port: 21
-          protocol: ftp
-          security: loose
-          local-dir: ./frontend/build/
-          server-dir: ./
-          dangerous-clean-slate: false
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/.vscode/**
-            **/README.md
+          localDir: './frontend/build/'
+          remoteDir: '/public_html/'
+          options: '--delete --verbose'
             
-      - name: Deploy Backend to admin.rubyet.info
+      - name: Deploy Backend via FTP
         if: steps.changes.outputs.backend == 'true'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: sebastianpopp/ftp-action@releases/v2
         with:
-          server: ${{ secrets.FTP_SERVER_ADMIN }}
-          username: ${{ secrets.FTP_USERNAME_ADMIN }}
+          host: ftp.rubyet.info
+          user: ${{ secrets.FTP_USERNAME_ADMIN }}
           password: ${{ secrets.FTP_PASSWORD_ADMIN }}
-          port: 21
-          protocol: ftp
-          security: loose
-          local-dir: ./backend/
-          server-dir: ./
-          dangerous-clean-slate: false
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/.vscode/**
-            **/README.md
-            **/.env
-            **/data/**
+          localDir: './backend/'
+          remoteDir: '/admin.rubyet.info/'
+          options: '--delete --verbose --exclude node_modules --exclude .git --exclude .env --exclude data'
             
       - name: Deployment Success Notification
         if: success()
