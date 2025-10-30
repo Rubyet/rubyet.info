@@ -82,10 +82,12 @@ jobs:
         if: steps.changes.outputs.frontend == 'true'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: rubyet.info
+          server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
+          protocol: ftp
+          security: loose
           local-dir: ./frontend/build/
           server-dir: ./
           dangerous-clean-slate: false
@@ -100,10 +102,12 @@ jobs:
         if: steps.changes.outputs.backend == 'true'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: admin.rubyet.info
+          server: ${{ secrets.FTP_SERVER_ADMIN }}
           username: ${{ secrets.FTP_USERNAME_ADMIN }}
           password: ${{ secrets.FTP_PASSWORD_ADMIN }}
           port: 21
+          protocol: ftp
+          security: loose
           local-dir: ./backend/
           server-dir: ./
           dangerous-clean-slate: false
