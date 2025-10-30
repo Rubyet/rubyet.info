@@ -80,25 +80,32 @@ jobs:
           
       - name: Deploy Frontend via FTP
         if: steps.changes.outputs.frontend == 'true'
-        uses: sebastianpopp/ftp-action@releases/v2
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          host: ftp.rubyet.info
-          user: ${{ secrets.FTP_USERNAME }}
+          server: ftp.rubyet.info
+          username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          localDir: './frontend/build/'
-          remoteDir: '/public_html/'
-          options: '--delete --verbose'
+          local-dir: ./frontend/build/
+          server-dir: ./public_html/
+          timeout: 300000
+          log-level: minimal
             
       - name: Deploy Backend via FTP
         if: steps.changes.outputs.backend == 'true'
-        uses: sebastianpopp/ftp-action@releases/v2
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          host: ftp.rubyet.info
-          user: ${{ secrets.FTP_USERNAME_ADMIN }}
+          server: ftp.rubyet.info
+          username: ${{ secrets.FTP_USERNAME_ADMIN }}
           password: ${{ secrets.FTP_PASSWORD_ADMIN }}
-          localDir: './backend/'
-          remoteDir: '/admin.rubyet.info/'
-          options: '--delete --verbose --exclude node_modules --exclude .git --exclude .env --exclude data'
+          local-dir: ./backend/
+          server-dir: ./admin.rubyet.info/
+          exclude: |
+            **/node_modules/**
+            **/.git/**
+            **/.env
+            **/data/**
+          timeout: 300000
+          log-level: minimal
             
       - name: Deployment Success Notification
         if: success()

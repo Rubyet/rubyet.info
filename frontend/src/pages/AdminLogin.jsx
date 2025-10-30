@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiLock, FiUser, FiEye, FiEyeOff, FiSun, FiMoon } from 'react-icons/fi';
+import { useState } from 'react';
+import { FiEye, FiEyeOff, FiLock, FiMoon, FiSun, FiUser } from 'react-icons/fi';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import './AdminLogin.css';
 
