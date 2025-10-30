@@ -86,7 +86,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./frontend/build/
-          server-dir: ./public_html/
+          server-dir: ./
           timeout: 300000
           log-level: minimal
             
@@ -98,7 +98,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME_ADMIN }}
           password: ${{ secrets.FTP_PASSWORD_ADMIN }}
           local-dir: ./backend/
-          server-dir: ./admin.rubyet.info/
+          server-dir: ./
           exclude: |
             **/node_modules/**
             **/.git/**
