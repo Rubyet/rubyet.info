@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
-import './styles/App.css';
-import { AuthProvider } from './contexts/AuthContext';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import { AuthProvider } from './contexts/AuthContext';
+import './styles/App.css';
 
 // Layout Components
-import Navbar from './components/Navbar/Navbar.jsx';
-import Hero from './components/Hero/Hero.jsx';
 import About from './components/About/About.jsx';
-import Experience from './components/Experience/Experience.jsx';
-import Education from './components/Education/Education.jsx';
-import Skills from './components/Skills/Skills.jsx';
-import Projects from './components/Projects/Projects.jsx';
-import Testimonials from './components/Testimonials/Testimonials.jsx';
 import Blog from './components/Blog/Blog.jsx';
 import Contact from './components/Contact/Contact.jsx';
+import Education from './components/Education/Education.jsx';
+import Experience from './components/Experience/Experience.jsx';
 import Footer from './components/Footer/Footer.jsx';
+import Hero from './components/Hero/Hero.jsx';
+import Navbar from './components/Navbar/Navbar.jsx';
+import Projects from './components/Projects/Projects.jsx';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop.jsx';
+import Skills from './components/Skills/Skills.jsx';
+import Testimonials from './components/Testimonials/Testimonials.jsx';
 
 // Page Components
-import BlogDetail from './pages/BlogDetail';
-import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminLogin from './pages/AdminLogin';
+import BlogDetail from './pages/BlogDetail';
 import BlogEditor from './pages/BlogEditor';
 
 function App() {
