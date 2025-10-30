@@ -80,32 +80,27 @@ jobs:
           
       - name: Deploy Frontend via FTP
         if: steps.changes.outputs.frontend == 'true'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ftp.rubyet.info
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./frontend/build/
-          server-dir: ./public_html/
-          timeout: 300000
-          log-level: minimal
+        run: |
+          sudo apt-get update && sudo apt-get install -y lftp
+          lftp -c "
+            set ssl:verify-certificate no;
+            set ftp:passive-mode on;
+            open -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ftp.rubyet.info;
+            mirror -R --verbose --delete --parallel=4 ./frontend/build/ ./public_html/;
+            bye;
+          "
             
       - name: Deploy Backend via FTP
         if: steps.changes.outputs.backend == 'true'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ftp.rubyet.info
-          username: ${{ secrets.FTP_USERNAME_ADMIN }}
-          password: ${{ secrets.FTP_PASSWORD_ADMIN }}
-          local-dir: ./backend/
-          server-dir: ./admin.rubyet.info/
-          exclude: |
-            **/node_modules/**
-            **/.git/**
-            **/.env
-            **/data/**
-          timeout: 300000
-          log-level: minimal
+        run: |
+          sudo apt-get update && sudo apt-get install -y lftp
+          lftp -c "
+            set ssl:verify-certificate no;
+            set ftp:passive-mode on;
+            open -u ${{ secrets.FTP_USERNAME_ADMIN }},${{ secrets.FTP_PASSWORD_ADMIN }} ftp.rubyet.info;
+            mirror -R --verbose --delete --parallel=4 --exclude node_modules/ --exclude .git/ --exclude .env --exclude data/ ./backend/ ./admin.rubyet.info/;
+            bye;
+          "
             
       - name: Deployment Success Notification
         if: success()
