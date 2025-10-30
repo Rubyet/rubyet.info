@@ -17,15 +17,9 @@ const { initializeAdmin } = require('./controllers/authController');
 const app = express();
 
 // ==================== MIDDLEWARE ==================
-// Configure CORS for production
+// Configure CORS to allow all origins
 const corsOptions = {
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'https://rubyet.info',
-    'https://www.rubyet.info',
-    'https://admin.rubyet.info'
-  ],
+  origin: true, // Allow all origins
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -36,7 +30,15 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: REQUEST_SIZE_LIMIT }));
 app.use(express.urlencoded({ extended: true, limit: REQUEST_SIZE_LIMIT }));
 
+// Serve static files from public directory
+app.use(express.static('public'));
+
 // ==================== ROUTES ======================
+
+// Root route - serve landing page
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public/index.html');
+});
 
 // Health check
 app.get('/api/health', (req, res) => {
