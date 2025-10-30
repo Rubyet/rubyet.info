@@ -126,14 +126,6 @@ function App() {
                 }
               />
               <Route
-                path="/admin/blog"
-                element={
-                  <ProtectedRoute>
-                    <AdminDashboardPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
                 path="/admin/blog/new"
                 element={
                   <ProtectedRoute>

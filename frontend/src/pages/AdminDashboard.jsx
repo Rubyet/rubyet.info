@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   FiLogOut,
@@ -14,13 +14,27 @@ import AdminContactsContent from '../components/admin/AdminContactsContent';
 import './AdminDashboard.css';
 
 const AdminDashboard = ({ darkMode, toggleTheme }) => {
-  const [activeTab, setActiveTab] = useState('blog');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'blog');
   const { logout, session } = useAuth();
   const navigate = useNavigate();
+
+  // Update tab based on URL parameter
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam && (tabParam === 'blog' || tabParam === 'contacts')) {
+      setActiveTab(tabParam);
+    }
+  }, [searchParams]);
 
   const handleLogout = () => {
     logout();
     navigate('/admin/login');
+  };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setSearchParams({ tab });
   };
 
   return (
@@ -57,13 +71,13 @@ const AdminDashboard = ({ darkMode, toggleTheme }) => {
       >
         <button
           className={`tab-btn ${activeTab === 'blog' ? 'active' : ''}`}
-          onClick={() => setActiveTab('blog')}
+          onClick={() => handleTabChange('blog')}
         >
           <FiFileText /> Blog Management
         </button>
         <button
           className={`tab-btn ${activeTab === 'contacts' ? 'active' : ''}`}
-          onClick={() => setActiveTab('contacts')}
+          onClick={() => handleTabChange('contacts')}
         >
           <FiMail /> Contact Submissions
         </button>
