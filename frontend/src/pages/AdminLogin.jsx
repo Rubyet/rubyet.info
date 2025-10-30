@@ -15,7 +15,7 @@ const AdminLogin = ({ darkMode, toggleTheme }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = location.state?.from?.pathname || '/admin/blog';
+  const from = location.state?.from?.pathname || '/admin';
 
   // Redirect if already authenticated
   if (isAuthenticated) {
@@ -28,15 +28,16 @@ const AdminLogin = ({ darkMode, toggleTheme }) => {
     setLoading(true);
 
     try {
-      const result = login(credentials.username, credentials.password);
+      const result = await login(credentials.username, credentials.password);
       
       if (result.success) {
         navigate(from, { replace: true });
       } else {
-        setError(result.message);
+        setError(result.message || 'Invalid username or password');
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
+      console.error('Login error:', err);
     } finally {
       setLoading(false);
     }
@@ -132,10 +133,10 @@ const AdminLogin = ({ darkMode, toggleTheme }) => {
 
         <div className="admin-login-footer">
           <p className="default-creds">
-            Default credentials: <code>admin / admin123</code>
+            Default credentials: <code>admin / Admin@2024!</code>
           </p>
           <p className="security-note">
-            ⚠️ Change default password after first login
+            ⚠️ Change default password immediately after first login
           </p>
         </div>
       </motion.div>

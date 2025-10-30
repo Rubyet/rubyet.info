@@ -1,111 +1,173 @@
 /**
- * Authentication Service for Admin Access
- * Simple password-based authentication using localStorage
+ * Secure Authentication Service for Admin Access
+ * Uses backend JWT authentication with encrypted passwords
  */
 
-const AUTH_STORAGE_KEY = 'portfolio_admin_auth';
-const SESSION_STORAGE_KEY = 'portfolio_admin_session';
-
-// Default admin credentials (change these!)
-const DEFAULT_ADMIN = {
-  username: 'admin',
-  password: 'admin123', // CHANGE THIS in production!
-  email: 'rittick.2012@gmail.com'
-};
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const TOKEN_KEY = 'admin_token';
+const USER_KEY = 'admin_user';
 
 class AuthService {
-  constructor() {
-    this.initializeAuth();
-  }
+  // Login with backend authentication
+  async login(username, password) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
 
-  // Initialize auth system
-  initializeAuth() {
-    if (!localStorage.getItem(AUTH_STORAGE_KEY)) {
-      // Store hashed password (in production, use proper encryption)
-      const adminData = {
-        ...DEFAULT_ADMIN,
-        password: this.hashPassword(DEFAULT_ADMIN.password)
+      const data = await response.json();
+
+      if (data.success && data.token) {
+        // Store token and user info in localStorage
+        localStorage.setItem(TOKEN_KEY, data.token);
+        localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+
+        return {
+          success: true,
+          user: data.user,
+          session: {
+            username: data.user.username,
+            email: data.user.email,
+            role: data.user.role,
+            loginTime: new Date().toISOString()
+          }
+        };
+      }
+
+      return {
+        success: false,
+        message: data.message || 'Login failed'
       };
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(adminData));
-    }
-  }
-
-  // Simple hash function (use bcrypt in production!)
-  hashPassword(password) {
-    // This is NOT secure - just for demonstration
-    // In production, handle authentication on server-side
-    return btoa(password);
-  }
-
-  // Login
-  login(username, password) {
-    const adminData = JSON.parse(localStorage.getItem(AUTH_STORAGE_KEY));
-    const hashedPassword = this.hashPassword(password);
-
-    if (adminData.username === username && adminData.password === hashedPassword) {
-      // Create session
-      const session = {
-        username,
-        email: adminData.email,
-        loginTime: new Date().toISOString(),
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
+    } catch (error) {
+      console.error('Login error:', error);
+      return {
+        success: false,
+        message: 'Network error. Please try again.'
       };
-      
-      sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
-      return { success: true, session };
     }
-
-    return { success: false, message: 'Invalid username or password' };
   }
 
   // Logout
   logout() {
-    sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+  }
+
+  // Get stored token
+  getToken() {
+    return localStorage.getItem(TOKEN_KEY);
+  }
+
+  // Get stored user info
+  getUser() {
+    const userStr = localStorage.getItem(USER_KEY);
+    return userStr ? JSON.parse(userStr) : null;
+  }
+
+  // Get session (for compatibility with existing code)
+  getSession() {
+    const user = this.getUser();
+    if (!user) return null;
+
+    return {
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      loginTime: new Date().toISOString()
+    };
   }
 
   // Check if user is authenticated
-  isAuthenticated() {
-    const session = this.getSession();
+  async isAuthenticated() {
+    const token = this.getToken();
     
-    if (!session) return false;
+    if (!token) return false;
 
-    // Check if session expired
-    if (new Date(session.expiresAt) < new Date()) {
-      this.logout();
+    try {
+      // Verify token with backend
+      const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+      return data.success;
+    } catch (error) {
+      console.error('Token verification error:', error);
       return false;
     }
-
-    return true;
   }
 
-  // Get current session
-  getSession() {
-    const sessionData = sessionStorage.getItem(SESSION_STORAGE_KEY);
-    return sessionData ? JSON.parse(sessionData) : null;
-  }
-
-  // Update admin password
-  updatePassword(currentPassword, newPassword) {
-    const adminData = JSON.parse(localStorage.getItem(AUTH_STORAGE_KEY));
-    const hashedCurrentPassword = this.hashPassword(currentPassword);
-
-    if (adminData.password !== hashedCurrentPassword) {
-      return { success: false, message: 'Current password is incorrect' };
+  // Change password
+  async changePassword(currentPassword, newPassword) {
+    const token = this.getToken();
+    
+    if (!token) {
+      return {
+        success: false,
+        message: 'Not authenticated'
+      };
     }
 
-    adminData.password = this.hashPassword(newPassword);
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(adminData));
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
 
-    return { success: true, message: 'Password updated successfully' };
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Change password error:', error);
+      return {
+        success: false,
+        message: 'Network error. Please try again.'
+      };
+    }
   }
 
-  // Get admin info
+  // Get current user info from backend
+  async getCurrentUser() {
+    const token = this.getToken();
+    
+    if (!token) return null;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/me`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        // Update stored user info
+        localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+        return data.user;
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Get user error:', error);
+      return null;
+    }
+  }
+
+  // Get admin info (for compatibility)
   getAdminInfo() {
-    const adminData = JSON.parse(localStorage.getItem(AUTH_STORAGE_KEY));
-    return {
-      username: adminData.username,
-      email: adminData.email
-    };
+    return this.getUser();
   }
 }
 

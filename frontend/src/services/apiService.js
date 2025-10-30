@@ -4,15 +4,33 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api
 // Helper function to handle API requests
 async function apiRequest(endpoint, options = {}) {
   try {
+    // Get auth token from localStorage
+    const token = localStorage.getItem('admin_token');
+    
+    // Build headers
+    const headers = {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    };
+    
+    // Add Authorization header if token exists
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
+      headers,
       ...options,
     });
 
     if (!response.ok) {
+      // Handle authentication errors
+      if (response.status === 401) {
+        // Token expired or invalid - redirect to login
+        localStorage.removeItem('admin_token');
+        localStorage.removeItem('admin_user');
+        window.location.href = '/admin/login';
+      }
       throw new Error(`API Error: ${response.statusText}`);
     }
 

@@ -20,8 +20,8 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  const checkAuth = () => {
-    const authenticated = authService.isAuthenticated();
+  const checkAuth = async () => {
+    const authenticated = await authService.isAuthenticated();
     setIsAuthenticated(authenticated);
     if (authenticated) {
       setSession(authService.getSession());
@@ -29,8 +29,8 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   };
 
-  const login = (username, password) => {
-    const result = authService.login(username, password);
+  const login = async (username, password) => {
+    const result = await authService.login(username, password);
     if (result.success) {
       setIsAuthenticated(true);
       setSession(result.session);

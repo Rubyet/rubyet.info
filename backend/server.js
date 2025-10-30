@@ -11,6 +11,8 @@ const postRoutes = require('./routes/postRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const apiRoutes = require('./routes/apiRoutes');
 const aiRoutes = require('./routes/aiRoutes');
+const authRoutes = require('./routes/authRoutes');
+const { initializeAdmin } = require('./controllers/authController');
 
 const app = express();
 
@@ -34,6 +36,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/posts', postRoutes);
 app.use('/api/contacts', contactRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api', apiRoutes);
 
 // ==================== ERROR HANDLING ====================
@@ -45,6 +48,9 @@ async function startServer() {
   try {
     // Initialize data files
     await initializeDataFiles();
+    
+    // Initialize admin user
+    await initializeAdmin();
     
     // Start server
     app.listen(PORT, () => {
@@ -66,6 +72,11 @@ async function startServer() {
       console.log('  • POST   /api/contacts');
       console.log('  • GET    /api/statistics');
       console.log('  • GET    /api/tags');
+      console.log('\n🔐 Auth Endpoints:');
+      console.log('  • POST   /api/auth/login');
+      console.log('  • GET    /api/auth/verify');
+      console.log('  • GET    /api/auth/me');
+      console.log('  • POST   /api/auth/change-password');
       console.log('\n🤖 AI Endpoints:');
       console.log('  • POST   /api/ai/improve-title');
       console.log('  • POST   /api/ai/generate-excerpt');
