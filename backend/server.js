@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const compression = require('compression');
 require('dotenv').config();
 
 const { PORT, REQUEST_SIZE_LIMIT } = require('./config/constants');
@@ -32,20 +33,37 @@ const logWithTimestamp = (message) => {
 // Trust proxy for LiteSpeed/Passenger compatibility
 app.set('trust proxy', true);
 
+// Enable gzip compression for all responses
+app.use(compression({
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    return compression.filter(req, res);
+  },
+  level: 6 // Balanced compression level (1-9, default is 6)
+}));
+
 // Configure CORS to allow all origins
 app.use(cors());
 app.use(express.json({ limit: REQUEST_SIZE_LIMIT }));
 app.use(express.urlencoded({ extended: true, limit: REQUEST_SIZE_LIMIT }));
 
 // Serve static files from public directory
-app.use(express.static('public'));
+app.use(express.static('public', {
+  maxAge: '1h', // Cache static files for 1 hour
+  etag: true
+}));
 
-// Request logging middleware
-app.use((req, res, next) => {
-  const timestamp = new Date().toISOString();
-  console.log(`[${timestamp}] ${req.method} ${req.url}`);
-  next();
-});
+// Optimized request logging middleware (only in development or for errors)
+const isDevelopment = process.env.NODE_ENV !== 'production';
+if (isDevelopment) {
+  app.use((req, res, next) => {
+    const timestamp = new Date().toISOString();
+    console.log(`[${timestamp}] ${req.method} ${req.url}`);
+    next();
+  });
+}
 
 // ==================== ROUTES ======================
 
@@ -62,17 +80,17 @@ app.get('/api/health', (req, res) => {
   const minutes = Math.floor((uptime % 3600) / 60);
   const seconds = uptime % 60;
   
+  // Set cache headers for health endpoint
+  res.set('Cache-Control', 'public, max-age=10'); // Cache for 10 seconds
+  
   res.json({ 
     status: 'ok', 
     message: 'Blog API is running',
     timestamp: now.toISOString(),
-    serverStartTime: SERVER_START_TIME.toISOString(),
     uptime: `${hours}h ${minutes}m ${seconds}s`,
     uptimeSeconds: uptime,
     nodeVersion: process.version,
-    environment: process.env.NODE_ENV || 'development',
-    port: PORT,
-    logs: startupLogs
+    environment: process.env.NODE_ENV || 'development'
   });
 });
 

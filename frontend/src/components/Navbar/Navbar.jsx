@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiMenu, FiX, FiSun, FiMoon } from 'react-icons/fi';
+import { checkBackendHealth } from '../../services/healthService';
 import './Navbar.css';
 
 const Navbar = ({ darkMode, toggleTheme }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [healthStatus, setHealthStatus] = useState('yellow'); // 'green', 'yellow', 'red'
   const location = useLocation();
   const navigate = useNavigate();
   const isHomePage = location.pathname === '/';
@@ -17,6 +19,23 @@ const Navbar = ({ darkMode, toggleTheme }) => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Health check on mount and periodically
+  useEffect(() => {
+    const performHealthCheck = async () => {
+      setHealthStatus('yellow'); // Set to yellow while checking
+      const status = await checkBackendHealth();
+      setHealthStatus(status);
+    };
+
+    // Initial check
+    performHealthCheck();
+
+    // Check every 30 seconds
+    const interval = setInterval(performHealthCheck, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const scrollToSection = (id) => {
@@ -95,6 +114,17 @@ const Navbar = ({ darkMode, toggleTheme }) => {
         </div>
 
         <div className="nav-actions">
+          {/* Health Status Indicator */}
+          <motion.div
+            className={`health-indicator health-${healthStatus}`}
+            title={`Backend Status: ${healthStatus === 'green' ? 'All systems operational' : healthStatus === 'yellow' ? 'Checking...' : 'Service unavailable'}`}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="health-light"></div>
+          </motion.div>
+
           <motion.button
             className="theme-toggle"
             onClick={toggleTheme}

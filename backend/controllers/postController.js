@@ -10,15 +10,18 @@ const { generateSlug, ensureUniqueSlug, formatDate } = require('../utils/helpers
 exports.getAllPosts = async (req, res) => {
   try {
     const { filter } = req.query;
-    console.log(`[${new Date().toISOString()}] GET /api/posts - filter: ${filter || 'none'}`);
     const posts = await postModel.findByStatus(filter);
-    console.log(`[${new Date().toISOString()}] Successfully retrieved ${posts.length} posts`);
+    
+    // Set cache headers for better performance
+    res.set({
+      'Cache-Control': 'public, max-age=60', // Cache for 60 seconds
+      'ETag': `"${Date.now()}"` // Simple ETag based on timestamp
+    });
+    
     res.json(posts);
   } catch (error) {
     const timestamp = new Date().toISOString();
-    console.error(`[${timestamp}] ❌ Error in getAllPosts:`, error);
-    console.error(`[${timestamp}] Error message: ${error.message}`);
-    console.error(`[${timestamp}] Stack trace:`, error.stack);
+    console.error(`[${timestamp}] ❌ Error in getAllPosts:`, error.message);
     res.status(500).json({ 
       error: 'Internal server error',
       message: 'Failed to fetch posts',
@@ -39,6 +42,8 @@ exports.getPostById = async (req, res) => {
     return res.status(404).json({ error: 'Post not found' });
   }
   
+  // Cache individual posts for 5 minutes
+  res.set('Cache-Control', 'public, max-age=300');
   res.json(post);
 };
 
@@ -54,6 +59,8 @@ exports.getPostBySlug = async (req, res) => {
     return res.status(404).json({ error: 'Post not found' });
   }
   
+  // Cache individual posts for 5 minutes
+  res.set('Cache-Control', 'public, max-age=300');
   res.json(post);
 };
 
@@ -147,6 +154,9 @@ exports.incrementViews = async (req, res) => {
 exports.searchPosts = async (req, res) => {
   const { q, status } = req.query;
   const posts = await postModel.search(q, status);
+  
+  // Cache search results for 30 seconds
+  res.set('Cache-Control', 'public, max-age=30');
   res.json(posts);
 };
 
@@ -157,6 +167,9 @@ exports.searchPosts = async (req, res) => {
  */
 exports.getPostsByTag = async (req, res) => {
   const posts = await postModel.findByTag(req.params.tag);
+  
+  // Cache tag results for 2 minutes
+  res.set('Cache-Control', 'public, max-age=120');
   res.json(posts);
 };
 
@@ -167,6 +180,9 @@ exports.getPostsByTag = async (req, res) => {
  */
 exports.getAllTags = async (req, res) => {
   const tags = await postModel.getTags();
+  
+  // Cache tags for 5 minutes
+  res.set('Cache-Control', 'public, max-age=300');
   res.json(tags);
 };
 
@@ -182,6 +198,8 @@ exports.getRelatedPosts = async (req, res) => {
     return res.status(404).json({ error: 'Post not found' });
   }
   
+  // Cache related posts for 5 minutes
+  res.set('Cache-Control', 'public, max-age=300');
   res.json(relatedPosts);
 };
 
@@ -192,6 +210,9 @@ exports.getRelatedPosts = async (req, res) => {
  */
 exports.getStatistics = async (req, res) => {
   const stats = await postModel.getStatistics();
+  
+  // Cache statistics for 1 minute
+  res.set('Cache-Control', 'public, max-age=60');
   res.json(stats);
 };
 

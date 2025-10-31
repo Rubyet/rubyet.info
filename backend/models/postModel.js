@@ -2,14 +2,52 @@ const fs = require('fs').promises;
 const { POSTS_FILE } = require('../config/database');
 
 class PostModel {
+  constructor() {
+    // In-memory cache
+    this.cache = null;
+    this.cacheTimestamp = null;
+    this.CACHE_TTL = 60000; // Cache for 60 seconds (1 minute)
+  }
+
   /**
-   * Read all posts from file
+   * Check if cache is valid
+   * @returns {boolean} Cache validity
+   */
+  isCacheValid() {
+    if (!this.cache || !this.cacheTimestamp) {
+      return false;
+    }
+    return (Date.now() - this.cacheTimestamp) < this.CACHE_TTL;
+  }
+
+  /**
+   * Invalidate cache (call after write operations)
+   */
+  invalidateCache() {
+    this.cache = null;
+    this.cacheTimestamp = null;
+  }
+
+  /**
+   * Read all posts from file with caching
    * @returns {Promise<Array>} Array of posts
    */
   async findAll() {
     try {
+      // Return cached data if valid
+      if (this.isCacheValid()) {
+        return [...this.cache]; // Return copy to prevent mutations
+      }
+
+      // Read from file
       const data = await fs.readFile(POSTS_FILE, 'utf8');
-      return JSON.parse(data);
+      const posts = JSON.parse(data);
+      
+      // Update cache
+      this.cache = posts;
+      this.cacheTimestamp = Date.now();
+      
+      return [...posts]; // Return copy
     } catch (error) {
       console.error('Error reading posts:', error);
       return [];
@@ -234,6 +272,10 @@ class PostModel {
   async save(posts) {
     try {
       await fs.writeFile(POSTS_FILE, JSON.stringify(posts, null, 2));
+      
+      // Invalidate cache after write
+      this.invalidateCache();
+      
       return true;
     } catch (error) {
       console.error('Error writing posts:', error);
