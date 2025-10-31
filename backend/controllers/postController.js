@@ -8,9 +8,17 @@ const { generateSlug, ensureUniqueSlug, formatDate } = require('../utils/helpers
  * @access  Public
  */
 exports.getAllPosts = async (req, res) => {
-  const { filter } = req.query;
-  const posts = await postModel.findByStatus(filter);
-  res.json(posts);
+  try {
+    const { filter } = req.query;
+    const posts = await postModel.findByStatus(filter);
+    res.json(posts);
+  } catch (error) {
+    console.error('Error in getAllPosts:', error);
+    res.status(500).json({ 
+      error: 'Internal server error',
+      message: 'Failed to fetch posts'
+    });
+  }
 };
 
 /**

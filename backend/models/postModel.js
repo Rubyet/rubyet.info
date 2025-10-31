@@ -42,15 +42,25 @@ class PostModel {
    * @returns {Promise<Array>} Filtered posts
    */
   async findByStatus(filter = 'all') {
-    let posts = await this.findAll();
-    
-    if (filter === 'published') {
-      posts = posts.filter(post => post.status === 'published');
-    } else if (filter === 'draft') {
-      posts = posts.filter(post => post.status === 'draft');
+    try {
+      let posts = await this.findAll();
+      
+      if (filter === 'published') {
+        posts = posts.filter(post => post.status === 'published');
+      } else if (filter === 'draft') {
+        posts = posts.filter(post => post.status === 'draft');
+      }
+      
+      // Sort safely with fallback for missing dates
+      return posts.sort((a, b) => {
+        const dateA = a.publishedDate ? new Date(a.publishedDate) : new Date(0);
+        const dateB = b.publishedDate ? new Date(b.publishedDate) : new Date(0);
+        return dateB - dateA;
+      });
+    } catch (error) {
+      console.error('Error in findByStatus:', error);
+      return [];
     }
-    
-    return posts.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
   }
 
   /**
