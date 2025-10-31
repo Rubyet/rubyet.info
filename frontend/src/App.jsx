@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import LoadingOverlay from './components/LoadingOverlay/LoadingOverlay';
 import { AuthProvider } from './contexts/AuthContext';
+import { LoadingProvider, useLoading } from './contexts/LoadingContext';
+import { setLoadingCallbacks } from './services/apiService';
 import './styles/App.css';
 
 // Layout Components
@@ -114,47 +117,131 @@ function App() {
 
   return (
     <HelmetProvider>
-      <AuthProvider>
-        <Router>
-          <div className="App">
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<HomePage />} />
-              <Route path="/blog" element={<BlogPage />} />
-              <Route path="/blog/:slug" element={<BlogDetailPage />} />
-              
-              {/* Admin Routes */}
-              <Route path="/admin/login" element={<AdminLoginPage />} />
-              <Route path="/admin/reset-password" element={<PasswordResetPage />} />
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute>
-                    <AdminDashboardPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/blog/new"
-                element={
-                  <ProtectedRoute>
-                    <BlogEditorPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/blog/edit/:id"
-                element={
-                  <ProtectedRoute>
-                    <BlogEditorPage />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-          </div>
-        </Router>
-      </AuthProvider>
+      <LoadingProvider>
+        <AppContent darkMode={darkMode} toggleTheme={toggleTheme} />
+      </LoadingProvider>
     </HelmetProvider>
+  );
+}
+
+// Separate component to use loading context
+function AppContent({ darkMode, toggleTheme }) {
+  const { startLoading, stopLoading } = useLoading();
+
+  useEffect(() => {
+    // Set loading callbacks for API service
+    setLoadingCallbacks(startLoading, stopLoading);
+  }, [startLoading, stopLoading]);
+
+  // Home Page Component
+  const HomePage = () => (
+    <>
+      <Navbar darkMode={darkMode} toggleTheme={toggleTheme} />
+      <Hero />
+      <About />
+      <Experience />
+      <Education />
+      <Skills />
+      <Projects />
+      <Testimonials />
+      <Blog />
+      <Contact />
+      <Footer />
+      <ScrollToTop />
+    </>
+  );
+
+  // Blog Page Component
+  const BlogPage = () => (
+    <>
+      <Navbar darkMode={darkMode} toggleTheme={toggleTheme} />
+      <Blog />
+      <Footer />
+      <ScrollToTop />
+    </>
+  );
+
+  // Blog Detail Page Wrapper
+  const BlogDetailPage = () => (
+    <>
+      <Navbar darkMode={darkMode} toggleTheme={toggleTheme} />
+      <BlogDetail />
+      <Footer />
+      <ScrollToTop />
+    </>
+  );
+
+  // Admin Pages Wrapper
+  const AdminDashboardPage = () => (
+    <>
+      <AdminDashboard darkMode={darkMode} toggleTheme={toggleTheme} />
+      <ScrollToTop />
+    </>
+  );
+
+  const BlogEditorPage = () => (
+    <>
+      <BlogEditor darkMode={darkMode} toggleTheme={toggleTheme} />
+      <ScrollToTop />
+    </>
+  );
+
+  const AdminLoginPage = () => (
+    <>
+      <AdminLogin darkMode={darkMode} toggleTheme={toggleTheme} />
+      <ScrollToTop />
+    </>
+  );
+
+  const PasswordResetPage = () => (
+    <>
+      <PasswordReset darkMode={darkMode} toggleTheme={toggleTheme} />
+      <ScrollToTop />
+    </>
+  );
+
+  return (
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <LoadingOverlay />
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:slug" element={<BlogDetailPage />} />
+            
+            {/* Admin Routes */}
+            <Route path="/admin/login" element={<AdminLoginPage />} />
+            <Route path="/admin/reset-password" element={<PasswordResetPage />} />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminDashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/blog/new"
+              element={
+                <ProtectedRoute>
+                  <BlogEditorPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/blog/edit/:id"
+              element={
+                <ProtectedRoute>
+                  <BlogEditorPage />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 
