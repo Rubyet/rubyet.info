@@ -1,7 +1,7 @@
 # Backend Health Check Indicator
 
 ## Overview
-A visual status indicator in the navbar that monitors backend availability in real-time.
+The logo dot (.) in the navbar serves as a visual status indicator that monitors backend availability in real-time.
 
 ## Features
 
@@ -9,15 +9,33 @@ A visual status indicator in the navbar that monitors backend availability in re
 - 🟢 **Green**: All backend services are operational
   - `/api/health` endpoint responds successfully
   - `/api/posts` endpoint responds successfully
+  - Subtle green glow effect
   
 - 🟡 **Yellow**: Health check in progress
   - Checking backend status
+  - Pulsing animation
   - Transitional state during startup
   
 - 🔴 **Red**: Backend service unavailable
   - Server not responding
   - Network timeout (5 seconds)
   - API errors
+  - Slow pulsing fade effect
+
+## Design
+
+The logo dot changes color and animation based on backend health:
+
+```
+Rubyet.
+      ↑
+   Health indicator (changes color)
+```
+
+- **Normal state**: Purple gradient (default)
+- **Green (healthy)**: Green with glow, steady
+- **Yellow (checking)**: Orange with scaling pulse
+- **Red (error)**: Red with opacity fade
 
 ## Implementation
 
@@ -32,12 +50,15 @@ A visual status indicator in the navbar that monitors backend availability in re
    - Added health status state
    - Health check runs on component mount
    - Automatic re-check every 30 seconds
-   - Visual indicator with tooltip
+   - Logo dot changes color based on status
+   - Framer Motion animations for pulsing effects
+   - Tooltip shows status on hover
 
 3. **`components/Navbar/Navbar.css`**
-   - Pulsing animation for each status
-   - Glowing shadow effects
+   - Health status color classes
+   - Glowing text-shadow effects
    - Smooth color transitions
+   - Integrated into logo-dot styling
 
 ## Behavior
 
@@ -52,9 +73,11 @@ A visual status indicator in the navbar that monitors backend availability in re
 - Updates indicator without page refresh
 
 ### User Experience
-- Hover over indicator to see status tooltip
+- Hover over the logo dot to see status tooltip
 - No interaction required - purely informational
 - Subtle animations indicate active monitoring
+- Integrated seamlessly into existing logo design
+- No separate indicator cluttering the UI
 
 ## Configuration
 
@@ -83,7 +106,9 @@ To adjust the health check behavior, modify:
 - **Check frequency**: Change interval time in `Navbar.jsx`
 - **Timeout duration**: Change timeout in `healthService.js`
 - **Monitored endpoints**: Add/remove endpoints in `checkBackendHealth()`
-- **Indicator size/position**: Adjust CSS in `Navbar.css`
+- **Animation style**: Adjust Framer Motion settings in logo-dot
+- **Colors**: Modify `.logo-dot.health-*` classes in `Navbar.css`
+- **Glow intensity**: Adjust `text-shadow` values in CSS
 
 ## Status Logic
 
@@ -99,4 +124,6 @@ Network error/timeout      → RED
 - Health checks are silent - no console logs on success
 - Errors are logged to console for debugging
 - Uses `AbortController` for request cancellation
-- Indicator appears on all pages with navbar
+- Logo dot appears on all pages with navbar
+- Animations powered by Framer Motion
+- Hover tooltip provides detailed status information

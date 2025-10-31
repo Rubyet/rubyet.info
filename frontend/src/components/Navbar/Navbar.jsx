@@ -94,7 +94,21 @@ const Navbar = ({ darkMode, toggleTheme }) => {
           onClick={handleLogoClick}
         >
           <span className="logo-text">Rubyet</span>
-          <span className="logo-dot">.</span>
+          <motion.span 
+            className={`logo-dot health-${healthStatus}`}
+            title={`Backend Status: ${healthStatus === 'green' ? 'All systems operational' : healthStatus === 'yellow' ? 'Checking...' : 'Service unavailable'}`}
+            animate={{ 
+              scale: healthStatus === 'yellow' ? [1, 1.2, 1] : 1,
+              opacity: healthStatus === 'red' ? [1, 0.5, 1] : 1
+            }}
+            transition={{ 
+              duration: healthStatus === 'yellow' ? 1 : 1.5,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            .
+          </motion.span>
         </motion.div>
 
         <div className={`nav-menu ${isMobileMenuOpen ? 'active' : ''}`}>
@@ -114,17 +128,6 @@ const Navbar = ({ darkMode, toggleTheme }) => {
         </div>
 
         <div className="nav-actions">
-          {/* Health Status Indicator */}
-          <motion.div
-            className={`health-indicator health-${healthStatus}`}
-            title={`Backend Status: ${healthStatus === 'green' ? 'All systems operational' : healthStatus === 'yellow' ? 'Checking...' : 'Service unavailable'}`}
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="health-light"></div>
-          </motion.div>
-
           <motion.button
             className="theme-toggle"
             onClick={toggleTheme}

@@ -52,8 +52,27 @@
 }
 
 .logo-dot {
-  color: #667eea;
   font-size: 2rem;
+  transition: all 0.3s ease;
+}
+
+/* Health status colors for logo dot */
+.logo-dot.health-green {
+  color: #10b981;
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.8),
+               0 0 20px rgba(16, 185, 129, 0.5);
+}
+
+.logo-dot.health-yellow {
+  color: #f59e0b;
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.8),
+               0 0 20px rgba(245, 158, 11, 0.5);
+}
+
+.logo-dot.health-red {
+  color: #ef4444;
+  text-shadow: 0 0 10px rgba(239, 68, 68, 0.8),
+               0 0 20px rgba(239, 68, 68, 0.5);
 }
 
 .nav-menu {
@@ -102,75 +121,6 @@
   display: flex;
   gap: 1rem;
   align-items: center;
-}
-
-/* Health Status Indicator */
-.health-indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: help;
-  position: relative;
-}
-
-.health-light {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-}
-
-.health-green .health-light {
-  background: #10b981;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.6),
-              0 0 20px rgba(16, 185, 129, 0.4);
-  animation: pulse-green 2s ease-in-out infinite;
-}
-
-.health-yellow .health-light {
-  background: #f59e0b;
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.6),
-              0 0 20px rgba(245, 158, 11, 0.4);
-  animation: pulse-yellow 1s ease-in-out infinite;
-}
-
-.health-red .health-light {
-  background: #ef4444;
-  box-shadow: 0 0 10px rgba(239, 68, 68, 0.6),
-              0 0 20px rgba(239, 68, 68, 0.4);
-  animation: pulse-red 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse-green {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
-
-@keyframes pulse-yellow {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.2);
-  }
-}
-
-@keyframes pulse-red {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
 }
 
 .theme-toggle {
