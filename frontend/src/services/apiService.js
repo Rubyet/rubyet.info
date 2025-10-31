@@ -23,6 +23,11 @@ async function apiRequest(endpoint, options = {}) {
       ...options,
     });
 
+    // Handle 204 No Content response
+    if (response.status === 204) {
+      return [];
+    }
+
     if (!response.ok) {
       // Handle authentication errors
       if (response.status === 401) {
@@ -34,10 +39,29 @@ async function apiRequest(endpoint, options = {}) {
       throw new Error(`API Error: ${response.statusText}`);
     }
 
-    return await response.json();
+    // Check if response has JSON content
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      return [];
+    }
+
+    // Check if response has body
+    const text = await response.text();
+    if (!text || text.trim() === '') {
+      return [];
+    }
+
+    // Try to parse JSON
+    try {
+      return JSON.parse(text);
+    } catch (parseError) {
+      console.error('Failed to parse JSON:', parseError);
+      return [];
+    }
   } catch (error) {
     console.error('API Request failed:', error);
-    throw error;
+    // Return empty array instead of throwing to prevent infinite loading
+    return [];
   }
 }
 
