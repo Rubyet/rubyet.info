@@ -18,15 +18,9 @@ const app = express();
 
 // ==================== MIDDLEWARE ==================
 // Configure CORS to allow all origins
-const corsOptions = {
-  origin: true, // Allow all origins
-  credentials: true,
-  optionsSuccessStatus: 200,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
 
-app.use(cors(corsOptions));
+
+app.use(cors());
 app.use(express.json({ limit: REQUEST_SIZE_LIMIT }));
 app.use(express.urlencoded({ extended: true, limit: REQUEST_SIZE_LIMIT }));
 
