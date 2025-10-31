@@ -29,6 +29,9 @@ const logWithTimestamp = (message) => {
 };
 
 // ==================== MIDDLEWARE ==================
+// Trust proxy for LiteSpeed/Passenger compatibility
+app.set('trust proxy', true);
+
 // Configure CORS to allow all origins
 app.use(cors());
 app.use(express.json({ limit: REQUEST_SIZE_LIMIT }));
@@ -99,43 +102,53 @@ async function startServer() {
     await initializeAdmin();
     logWithTimestamp('✓ Admin user initialized');
     
-    // Start server
-    app.listen(PORT, () => {
-      logWithTimestamp(`Server listening on port ${PORT}`);
-      console.log('\n' + '='.repeat(50));
-      console.log('🚀 Blog API Server Started Successfully!');
-      console.log('='.repeat(50));
-      console.log(`📍 Port: ${PORT}`);
-      console.log(`🌐 API URL: http://localhost:${PORT}/api`);
-      console.log(`✅ Health Check: http://localhost:${PORT}/api/health`);
-      console.log(`⏰ Started at: ${SERVER_START_TIME.toISOString()}`);
-      console.log('='.repeat(50) + '\n');
-      console.log('📝 Available Endpoints:');
-      console.log('  • GET    /api/posts');
-      console.log('  • GET    /api/posts/id/:id');
-      console.log('  • GET    /api/posts/slug/:slug');
-      console.log('  • POST   /api/posts');
-      console.log('  • PUT    /api/posts/:id');
-      console.log('  • DELETE /api/posts/:id');
-      console.log('  • GET    /api/contacts');
-      console.log('  • POST   /api/contacts');
-      console.log('  • GET    /api/statistics');
-      console.log('  • GET    /api/tags');
-      console.log('\n🔐 Auth Endpoints:');
-      console.log('  • POST   /api/auth/login');
-      console.log('  • POST   /api/auth/reset-password');
-      console.log('  • GET    /api/auth/verify');
-      console.log('  • GET    /api/auth/me');
-      console.log('  • POST   /api/auth/change-password');
-      console.log('\n🤖 AI Endpoints:');
-      console.log('  • POST   /api/ai/improve-title');
-      console.log('  • POST   /api/ai/generate-excerpt');
-      console.log('  • POST   /api/ai/help-content');
-      console.log('  • POST   /api/ai/suggest-tags');
-      console.log('  • POST   /api/ai/generate-seo');
-      console.log('='.repeat(50) + '\n');
-      logWithTimestamp('Server startup complete!');
-    });
+    // Check if running under Passenger (LiteSpeed/Apache)
+    if (typeof(PhusionPassenger) !== 'undefined') {
+      logWithTimestamp('✓ Running under Passenger - server managed externally');
+      PhusionPassenger.on('exit', function() {
+        logWithTimestamp('Passenger is shutting down');
+      });
+    } else {
+      // Only call listen() when NOT running under Passenger
+      app.listen(PORT, () => {
+        logWithTimestamp(`Server listening on port ${PORT}`);
+        console.log('\n' + '='.repeat(50));
+        console.log('🚀 Blog API Server Started Successfully!');
+        console.log('='.repeat(50));
+        console.log(`📍 Port: ${PORT}`);
+        console.log(`🌐 API URL: http://localhost:${PORT}/api`);
+        console.log(`✅ Health Check: http://localhost:${PORT}/api/health`);
+        console.log(`⏰ Started at: ${SERVER_START_TIME.toISOString()}`);
+        console.log('='.repeat(50) + '\n');
+        console.log('📝 Available Endpoints:');
+        console.log('  • GET    /api/posts');
+        console.log('  • GET    /api/posts/id/:id');
+        console.log('  • GET    /api/posts/slug/:slug');
+        console.log('  • POST   /api/posts');
+        console.log('  • PUT    /api/posts/:id');
+        console.log('  • DELETE /api/posts/:id');
+        console.log('  • GET    /api/contacts');
+        console.log('  • POST   /api/contacts');
+        console.log('  • GET    /api/statistics');
+        console.log('  • GET    /api/tags');
+        console.log('\n🔐 Auth Endpoints:');
+        console.log('  • POST   /api/auth/login');
+        console.log('  • POST   /api/auth/reset-password');
+        console.log('  • GET    /api/auth/verify');
+        console.log('  • GET    /api/auth/me');
+        console.log('  • POST   /api/auth/change-password');
+        console.log('\n🤖 AI Endpoints:');
+        console.log('  • POST   /api/ai/improve-title');
+        console.log('  • POST   /api/ai/generate-excerpt');
+        console.log('  • POST   /api/ai/help-content');
+        console.log('  • POST   /api/ai/suggest-tags');
+        console.log('  • POST   /api/ai/generate-seo');
+        console.log('='.repeat(50) + '\n');
+        logWithTimestamp('Server startup complete!');
+      });
+    }
+    
+    logWithTimestamp('✓ Server initialization complete');
   } catch (error) {
     const errorMsg = `Failed to start server: ${error.message}`;
     logWithTimestamp(`❌ ${errorMsg}`);
