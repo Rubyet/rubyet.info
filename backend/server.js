@@ -102,14 +102,17 @@ async function startServer() {
     await initializeAdmin();
     logWithTimestamp('✓ Admin user initialized');
     
-    // Check if running under Passenger (LiteSpeed/Apache)
-    if (typeof(PhusionPassenger) !== 'undefined') {
-      logWithTimestamp('✓ Running under Passenger - server managed externally');
-      PhusionPassenger.on('exit', function() {
-        logWithTimestamp('Passenger is shutting down');
-      });
+    // Check if running under Passenger (LiteSpeed/Apache) or other managed environments
+    const isPassenger = process.env.PASSENGER_APP_ENV || 
+                       typeof PhusionPassenger !== 'undefined' ||
+                       process.env.NODE_ENV === 'production';
+    
+    if (isPassenger) {
+      logWithTimestamp('✓ Running under managed environment (Passenger/Production)');
+      logWithTimestamp('✓ Server is managed externally - not calling app.listen()');
+      logWithTimestamp('Server startup complete!');
     } else {
-      // Only call listen() when NOT running under Passenger
+      // Only call listen() in development
       app.listen(PORT, () => {
         logWithTimestamp(`Server listening on port ${PORT}`);
         console.log('\n' + '='.repeat(50));
@@ -147,8 +150,6 @@ async function startServer() {
         logWithTimestamp('Server startup complete!');
       });
     }
-    
-    logWithTimestamp('✓ Server initialization complete');
   } catch (error) {
     const errorMsg = `Failed to start server: ${error.message}`;
     logWithTimestamp(`❌ ${errorMsg}`);
