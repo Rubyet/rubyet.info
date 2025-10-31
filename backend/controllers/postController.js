@@ -10,13 +10,19 @@ const { generateSlug, ensureUniqueSlug, formatDate } = require('../utils/helpers
 exports.getAllPosts = async (req, res) => {
   try {
     const { filter } = req.query;
+    console.log(`[${new Date().toISOString()}] GET /api/posts - filter: ${filter || 'none'}`);
     const posts = await postModel.findByStatus(filter);
+    console.log(`[${new Date().toISOString()}] Successfully retrieved ${posts.length} posts`);
     res.json(posts);
   } catch (error) {
-    console.error('Error in getAllPosts:', error);
+    const timestamp = new Date().toISOString();
+    console.error(`[${timestamp}] ❌ Error in getAllPosts:`, error);
+    console.error(`[${timestamp}] Error message: ${error.message}`);
+    console.error(`[${timestamp}] Stack trace:`, error.stack);
     res.status(500).json({ 
       error: 'Internal server error',
-      message: 'Failed to fetch posts'
+      message: 'Failed to fetch posts',
+      timestamp: timestamp
     });
   }
 };

@@ -16,16 +16,33 @@ const { initializeAdmin } = require('./controllers/authController');
 
 const app = express();
 
+// Track server start time
+const SERVER_START_TIME = new Date();
+const startupLogs = [];
+
+// Helper to log with timestamp
+const logWithTimestamp = (message) => {
+  const timestamp = new Date().toISOString();
+  const logMessage = `[${timestamp}] ${message}`;
+  console.log(logMessage);
+  startupLogs.push(logMessage);
+};
+
 // ==================== MIDDLEWARE ==================
 // Configure CORS to allow all origins
-
-
 app.use(cors());
 app.use(express.json({ limit: REQUEST_SIZE_LIMIT }));
 app.use(express.urlencoded({ extended: true, limit: REQUEST_SIZE_LIMIT }));
 
 // Serve static files from public directory
 app.use(express.static('public'));
+
+// Request logging middleware
+app.use((req, res, next) => {
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] ${req.method} ${req.url}`);
+  next();
+});
 
 // ==================== ROUTES ======================
 
@@ -34,12 +51,25 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
 
-// Health check
+// Health check with comprehensive info
 app.get('/api/health', (req, res) => {
+  const now = new Date();
+  const uptime = Math.floor((now - SERVER_START_TIME) / 1000); // seconds
+  const hours = Math.floor(uptime / 3600);
+  const minutes = Math.floor((uptime % 3600) / 60);
+  const seconds = uptime % 60;
+  
   res.json({ 
     status: 'ok', 
     message: 'Blog API is running',
-    timestamp: new Date().toISOString()
+    timestamp: now.toISOString(),
+    serverStartTime: SERVER_START_TIME.toISOString(),
+    uptime: `${hours}h ${minutes}m ${seconds}s`,
+    uptimeSeconds: uptime,
+    nodeVersion: process.version,
+    environment: process.env.NODE_ENV || 'development',
+    port: PORT,
+    logs: startupLogs
   });
 });
 
@@ -57,20 +87,28 @@ app.use(errorHandler);
 // ==================== SERVER STARTUP ====================
 async function startServer() {
   try {
+    logWithTimestamp('Starting server initialization...');
+    
     // Initialize data files
+    logWithTimestamp('Initializing data files...');
     await initializeDataFiles();
+    logWithTimestamp('✓ Data files initialized');
     
     // Initialize admin user
+    logWithTimestamp('Initializing admin user...');
     await initializeAdmin();
+    logWithTimestamp('✓ Admin user initialized');
     
     // Start server
     app.listen(PORT, () => {
+      logWithTimestamp(`Server listening on port ${PORT}`);
       console.log('\n' + '='.repeat(50));
       console.log('🚀 Blog API Server Started Successfully!');
       console.log('='.repeat(50));
       console.log(`📍 Port: ${PORT}`);
       console.log(`🌐 API URL: http://localhost:${PORT}/api`);
       console.log(`✅ Health Check: http://localhost:${PORT}/api/health`);
+      console.log(`⏰ Started at: ${SERVER_START_TIME.toISOString()}`);
       console.log('='.repeat(50) + '\n');
       console.log('📝 Available Endpoints:');
       console.log('  • GET    /api/posts');
@@ -96,16 +134,32 @@ async function startServer() {
       console.log('  • POST   /api/ai/suggest-tags');
       console.log('  • POST   /api/ai/generate-seo');
       console.log('='.repeat(50) + '\n');
+      logWithTimestamp('Server startup complete!');
     });
   } catch (error) {
+    const errorMsg = `Failed to start server: ${error.message}`;
+    logWithTimestamp(`❌ ${errorMsg}`);
     console.error('❌ Failed to start server:', error);
+    console.error('Stack trace:', error.stack);
     process.exit(1);
   }
 }
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
+  const errorMsg = `Unhandled Promise Rejection: ${err.message}`;
+  logWithTimestamp(`❌ ${errorMsg}`);
   console.error('❌ Unhandled Promise Rejection:', err);
+  console.error('Stack trace:', err.stack);
+  process.exit(1);
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  const errorMsg = `Uncaught Exception: ${err.message}`;
+  logWithTimestamp(`❌ ${errorMsg}`);
+  console.error('❌ Uncaught Exception:', err);
+  console.error('Stack trace:', err.stack);
   process.exit(1);
 });
 
